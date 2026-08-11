@@ -1,0 +1,8 @@
+{
+  "rewrites": [
+    { "source": "/start", "destination": "/app/index.html" },
+    { "source": "/quiz", "destination": "/app/index.html" },
+    { "source": "/review", "destination": "/app/index.html" },
+    { "source": "/report", "destination": "/app/index.html" }
+  ]
+}

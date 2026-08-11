@@ -1,0 +1,40 @@
+@import "tailwindcss";
+
+@theme {
+  /* Colors — named for the display-layer terminology in §7.1 */
+  --color-ink: #1c2024;
+  --color-ink-soft: #5c6570;
+  --color-ink-faint: #8a929b;
+
+  --color-mastered: #3f6f5e;
+  --color-mastered-bg: #eaf1ee;
+  --color-mastered-line: #cfe0d9;
+
+  --color-attention: #b5482f;
+  --color-attention-bg: #fbeeeb;
+  --color-attention-line: #f0c9bf;
+
+  --color-skip: #9a6b3f;
+  --color-skip-bg: #f7f0e6;
+  --color-skip-line: #e3cfa8;
+
+  --color-untested: #6b7280;
+  --color-untested-bg: #f0f1f2;
+  --color-untested-line: #d9dce0;
+
+  --color-partial: #b8860b;
+  --color-partial-bg: #faf3e0;
+
+  --color-border: #e3e6e9;
+  --color-page-bg: #f7f8f8;
+  --color-card-bg: #ffffff;
+
+  /* Border radius */
+  --radius-sm: 8px;
+  --radius-card: 12px;
+  --radius-btn: 10px;
+
+  /* Shadows */
+  --shadow-card: 0 1px 2px rgba(0,0,0,.05);
+  --shadow-hover: 0 6px 16px rgba(0,0,0,.08);
+}
