@@ -3,23 +3,20 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>CSLabs — Know Exactly What You Understand</title>
+<title>Full Landing Page Draft — Diagnostic Tool</title>
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@500;600;700&family=Inter:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
 <link rel="stylesheet" href="./landing/landing.css">
 <!--
   This file IS frontend/index.html -- Vercel serves dist/index.html at "/"
-  automatically with zero rewrite config needed. The React app's shell
-  lives at app/index.html instead (see vite.config.ts + vercel.json).
-
-  landing/landing.css (and any future landing/landing.js) are referenced
-  relatively so Vite's build pipeline processes them (minify + content-hash)
-  as part of THIS entry, same as it does src/main.tsx for the app entry.
-  Do NOT move them into /public -- files there are copied verbatim,
-  unprocessed, which would skip that pipeline entirely.
+  automatically, no rewrite needed. The React app's shell lives at
+  app/index.html instead (see vite.config.ts + vercel.json).
+  landing/landing.css is referenced relatively so Vite's build pipeline
+  processes it (minify + content-hash) same as it does src/main.tsx for
+  the app entry. Do NOT move it into /public -- files there are copied
+  verbatim, unprocessed, which would skip that pipeline entirely.
 -->
 </head>
-<body>
 
 <div class="review-banner">DRAFT FOR REVIEW — placeholder product name shown in gold dashed text — not final copy for images/screenshots</div>
 
@@ -30,10 +27,12 @@
   </div>
 </nav>
 
-<section class="hero">
-  <div class="wrap hero-inner">
-    <span class="eyebrow">FOR CSE · IT · AI &amp; DS ENGINEERING STUDENTS</span>
-    <h1>Know Exactly What You Understand — Concept by Concept</h1>
+<!-- ================= HERO ================= -->
+<div class="wrap">
+<div class="hero">
+  <div class="hero-content">
+    <div class="eyebrow">FOR CSE · IT · AI &amp; DS ENGINEERING STUDENTS</div>
+    <h1>Know Exactly What You <span class="accent">Understand</span> — Concept by Concept</h1>
     <p class="subhead">Go beyond your score. See exactly which concepts you've mastered, which need work, and what to focus on next — across DSA, OS, DBMS, OOP, and more.</p>
     <div class="cta-row">
       <a class="btn btn-primary" href="/start">Start Your Free Diagnostic</a>
@@ -45,27 +44,74 @@
       <span>No timer, work at your own pace</span>
     </div>
   </div>
-</section>
 
-<section class="problem">
+  <div class="map-wrap">
+    <div class="map-label">YOUR MASTERY MAP</div>
+    <div class="legend">
+      <span><i style="background:var(--node-strong)"></i>Strong</span>
+      <span><i style="background:var(--node-average)"></i>Average</span>
+      <span><i style="background:var(--node-weak)"></i>Weak</span>
+      <span><i style="background:var(--node-skipped)"></i>Skipped</span>
+    </div>
+    <svg class="map-svg" viewBox="0 0 480 480" preserveAspectRatio="xMidYMid meet">
+      <path class="edge" d="M240,90 L150,160"/><path class="edge" d="M240,90 L330,155"/>
+      <path class="edge" d="M150,160 L110,250"/><path class="edge" d="M150,160 L205,240"/>
+      <path class="edge" d="M330,155 L355,250"/><path class="edge" d="M330,155 L275,235"/>
+      <path class="edge" d="M110,250 L130,340"/><path class="edge" d="M205,240 L200,340"/>
+      <path class="edge" d="M275,235 L290,335"/><path class="edge" d="M355,250 L365,345"/>
+      <circle class="node-circle" cx="240" cy="90" r="14" fill="var(--node-average)"/>
+      <text class="node-label" x="240" y="68" text-anchor="middle">CORE CS</text>
+      <circle class="node-circle" cx="150" cy="160" r="10" fill="var(--node-strong)"/>
+      <text class="node-label" x="150" y="144" text-anchor="middle">DSA</text>
+      <circle class="node-circle" cx="330" cy="155" r="10" fill="var(--node-weak)"/>
+      <text class="node-label" x="330" y="139" text-anchor="middle">OS</text>
+      <circle class="node-circle" cx="110" cy="250" r="7" fill="var(--node-strong)"/>
+      <text class="node-label" x="70" y="254">Recursion</text>
+      <circle class="node-circle" cx="205" cy="240" r="7" fill="var(--node-average)"/>
+      <text class="node-label" x="210" y="244">Hashing</text>
+      <circle class="node-circle" cx="275" cy="235" r="7" fill="var(--node-weak)"/>
+      <text class="node-label" x="282" y="226">Scheduling</text>
+      <circle class="node-circle" cx="355" cy="250" r="7" fill="var(--node-skipped)"/>
+      <text class="node-label" x="362" y="254">Deadlocks</text>
+      <circle class="node-circle" cx="130" cy="340" r="6" fill="var(--node-average)"/>
+      <text class="node-label" x="82" y="344">Pointers</text>
+      <circle class="node-circle" cx="200" cy="340" r="6" fill="var(--node-strong)"/>
+      <text class="node-label" x="150" y="358">Normalization</text>
+      <circle class="node-circle" cx="290" cy="335" r="6" fill="var(--node-weak)"/>
+      <text class="node-label" x="296" y="330">Inheritance</text>
+      <circle class="node-circle" cx="365" cy="345" r="6" fill="var(--node-insufficient)"/>
+      <text class="node-label" x="371" y="349">TCP/IP</text>
+    </svg>
+  </div>
+</div>
+</div>
+
+<!-- ================= PROBLEM ================= -->
+<section class="alt">
   <div class="wrap">
-    <h2>You've Been Preparing for Months. But Do You Know Exactly Where You Stand?</h2>
-    <p class="subhead">Most students in your position aren't lacking effort. They're lacking a clear, honest picture of where they actually stand.</p>
+    <div class="section-head center">
+      <h2>You've Been Preparing for Months. But Do You Know Exactly Where You Stand?</h2>
+      <p class="section-sub">Most students in your position aren't lacking effort. They're lacking a clear, honest picture of where they actually stand.</p>
+    </div>
 
-    <div class="pain-points">
-      <div class="pain-point">
+    <div class="problem-grid">
+      <div class="problem-card">
+        <div class="mark" aria-hidden="true"><svg viewBox="0 0 24 24" fill="none" stroke="var(--accent-gold)" stroke-width="1.8"><path d="M4 19V10M10 19V5M16 19v-7M22 19H2"/></svg></div>
         <h3>Hours of study don't always translate to visible progress.</h3>
         <p>You cover a topic, practice a few problems, and move on. But there's rarely a clear way to confirm whether it's actually sunk in — until a later test brings back something you thought you already knew.</p>
       </div>
-      <div class="pain-point">
+      <div class="problem-card">
+        <div class="mark" aria-hidden="true"><svg viewBox="0 0 24 24" fill="none" stroke="var(--accent-gold)" stroke-width="1.8"><circle cx="12" cy="12" r="8.5"/><path d="M12 7v5l3 2"/></svg></div>
         <h3>Marks and real understanding aren't always the same thing.</h3>
         <p>It's possible to clear a test with a good score, and still find yourself unsure when asked to explain the same concept out loud — in a viva, an interview, or a technical discussion. Recall and understanding are measured differently, but most tests only check one of them.</p>
       </div>
-      <div class="pain-point">
+      <div class="problem-card">
+        <div class="mark" aria-hidden="true"><svg viewBox="0 0 24 24" fill="none" stroke="var(--accent-gold)" stroke-width="1.8"><path d="M7 7h10M7 12h7M7 17h10"/><path d="M4 4h16v16H4z"/></svg></div>
         <h3>The more you revise, the harder it gets to tell "familiar" from "understood."</h3>
-        <p>After enough repetition, almost everything starts to feel comfortable. Lectures, notes, and practice sets are designed to help you cover ground — but they don't tell you, individually, which of the hundred concepts you've covered are actually solid, and which just feel familiar because you've seen them often. That distinction only shows up when someone checks the concept itself, not just whether you've been exposed to it.</p>
+        <p>After enough repetition, almost everything starts to feel comfortable. Lectures, notes, and practice sets are designed to help you cover ground — but they don't tell you, individually, which of the hundred concepts you've covered are actually solid, and which just feel familiar because you've seen them often.</p>
       </div>
-      <div class="pain-point">
+      <div class="problem-card">
+        <div class="mark" aria-hidden="true"><svg viewBox="0 0 24 24" fill="none" stroke="var(--accent-gold)" stroke-width="1.8"><circle cx="12" cy="12" r="8.5"/><path d="M12 7v10M7 12h10"/></svg></div>
         <h3>Without a clear picture, everything feels equally important.</h3>
         <p>When you don't know exactly which concepts are weak, it's hard to prioritize. You end up spending equal time everywhere — revising what you already know well, and unintentionally skipping what actually needs the work.</p>
       </div>
@@ -75,70 +121,208 @@
   </div>
 </section>
 
-<section class="solution">
+<!-- ================= SOLUTION ================= -->
+<section>
   <div class="wrap">
-    <span class="eyebrow">THE SOLUTION</span>
-    <h2>A Diagnostic Built to Check Understanding — Not Just Track Coverage</h2>
-    <p>Most preparation — classes, notes, practice sets, mock tests — is designed to help you cover the syllabus and measure how much you remember. That's valuable, and it's necessary. But it answers a different question than the one that actually matters before an exam or interview: not "how much have I covered," but "what do I genuinely understand, and where exactly am I still weak."</p>
-    <p><span class="placeholder">[Diagnostic Name]</span> is built specifically to answer that second question. Instead of a single score, it looks at the evidence in how you respond — question by question, concept by concept — and builds an individual picture of your understanding: what's genuinely strong, what's average, what's weak, and what hasn't been tested clearly enough to tell either way.</p>
-    <p>The result isn't another score to track. It's a clear, honest map of where you stand today, and exactly what to focus on next.</p>
-  </div>
-</section>
-
-<section class="features">
-  <div class="wrap">
-    <span class="eyebrow">WHAT YOU GET</span>
-    <h2>Six Ways This Gives You Clarity</h2>
-
-    <div class="feature feature-01">
-      <h3>01 · Know What You Actually Understand</h3>
-      <p>A percentage tells you how many answers were correct. It doesn't tell you why — whether you reasoned through the concept, recalled a familiar pattern, or got lucky with the options in front of you.</p>
-      <p><span class="placeholder">[Diagnostic Name]</span> looks deeper than the final answer — examining the evidence in how you respond to assess whether a concept is genuinely understood, not just whether the outcome was correct.</p>
-    </div>
-
-    <div class="feature feature-02">
-      <h3>02 · Find Exactly Where You Stand — Down to the Concept</h3>
-      <p>Knowing you're "weak in Operating Systems" isn't specific enough to act on — most of the subject is probably fine.</p>
-      <p><span class="placeholder">[Diagnostic Name]</span> diagnoses down to the individual concept, so "weak" always means something specific and actionable.</p>
-    </div>
-
-    <div class="feature feature-03">
-      <h3>03 · Understand the Subject, Not Just the Syllabus</h3>
-      <p>A syllabus is built for teaching, chapter by chapter — not for showing how concepts depend on each other. <span class="placeholder">[Diagnostic Name]</span> structures every subject as Dimensions → Themes → Atomic Topics, revealing which foundational concepts are quietly holding back your progress elsewhere.</p>
-    </div>
-
-    <div class="feature feature-04">
-      <h3>04 · See Your Knowledge, Not Just Your Score</h3>
-      <p>Your results, laid out as an explorable map — every topic color-coded by how well you understand it, so you can trace exactly what's connected to what.</p>
-    </div>
-
-    <div class="feature feature-05">
-      <h3>05 · Know Exactly What to Study Next</h3>
-      <p>A prioritized path built from your gaps and how concepts depend on each other — so you always know what to study first, and why.</p>
-    </div>
-
-    <div class="feature feature-06">
-      <h3>06 · Turning Diagnostic Data Into a Clear Next Step</h3>
-      <p>AI-assisted analysis turns your diagnostic evidence into clear, specific recommendations — grounded entirely in your own responses.</p>
+    <div class="eyebrow" style="display:flex; margin-left:auto; margin-right:auto; width:fit-content;">THE SOLUTION</div>
+    <div class="solution-block">
+      <h2 style="margin-bottom:24px;">A Diagnostic Built to Check Understanding — Not Just Track Coverage</h2>
+      <p>Most preparation — classes, notes, practice sets, mock tests — is designed to help you cover the syllabus and measure how much you remember. That's valuable, and it's necessary. But it answers a different question than the one that actually matters before an exam or interview: not "how much have I covered," but "what do I genuinely understand, and where exactly am I still weak."</p>
+      <p><span class="placeholder">[Diagnostic Name]</span> is built specifically to answer that second question. Instead of a single score, it looks at the evidence in how you respond — question by question, concept by concept — and builds an individual picture of your understanding: what's genuinely strong, what's average, what's weak, and what hasn't been tested clearly enough to tell either way.</p>
+      <p>The result isn't another score to track. It's a clear, honest map of where you stand today, and exactly what to focus on next.</p>
     </div>
   </div>
 </section>
 
-<section class="how-it-works" id="how-it-works">
+<!-- ================= FEATURES ================= -->
+<section class="alt">
   <div class="wrap">
-    <h2>Three Steps to a Clear Picture of Where You Stand</h2>
-    <p class="subhead">No lengthy setup. Just answer, review, and know what to do next.</p>
+    <div class="section-head center" style="max-width:600px;">
+      <div class="eyebrow" style="margin-left:auto; margin-right:auto;">WHAT YOU GET</div>
+      <h2>Six Ways This Gives You Clarity</h2>
+    </div>
 
-    <div class="steps">
-      <div class="step">
+    <!-- Feature 1 -->
+    <div class="feature-block">
+      <div class="feature-row">
+        <div class="visual">
+          <svg width="180" height="180" viewBox="0 0 180 180">
+            <circle cx="90" cy="90" r="60" fill="none" stroke="var(--bg-panel-line)" stroke-width="2"/>
+            <circle cx="90" cy="90" r="60" fill="none" stroke="var(--accent-gold)" stroke-width="4" stroke-dasharray="235 377" stroke-linecap="round" transform="rotate(-90 90 90)"/>
+            <path d="M65,92 L82,108 L118,70" stroke="var(--node-strong)" stroke-width="5" fill="none" stroke-linecap="round" stroke-linejoin="round"/>
+          </svg>
+        </div>
+        <div class="textcol">
+          <div class="eyebrow">01 · EVIDENCE-BASED MASTERY</div>
+          <h3>Know What You Actually Understand</h3>
+          <p>A percentage tells you how many answers were correct. It doesn't tell you why — whether you reasoned through the concept, recalled a familiar pattern, or got lucky with the options in front of you.</p>
+          <p><span class="placeholder">[Diagnostic Name]</span> looks deeper than the final answer — examining the evidence in how you respond to assess whether a concept is genuinely understood, not just whether the outcome was correct.</p>
+        </div>
+      </div>
+    </div>
+
+    <!-- Feature 2 -->
+    <div class="feature-block">
+      <div class="feature-row reverse">
+        <div class="visual">
+          <div style="display:flex; flex-direction:column; gap:10px; width:220px;">
+            <div style="display:flex; align-items:center; gap:10px; font-family:'JetBrains Mono',monospace; font-size:12px; color:var(--text-muted);"><i style="width:9px;height:9px;border-radius:50%;background:var(--node-strong);display:inline-block;"></i>Strong — Recursion</div>
+            <div style="display:flex; align-items:center; gap:10px; font-family:'JetBrains Mono',monospace; font-size:12px; color:var(--text-muted);"><i style="width:9px;height:9px;border-radius:50%;background:var(--node-average);display:inline-block;"></i>Average — Hashing</div>
+            <div style="display:flex; align-items:center; gap:10px; font-family:'JetBrains Mono',monospace; font-size:12px; color:var(--text-muted);"><i style="width:9px;height:9px;border-radius:50%;background:var(--node-weak);display:inline-block;"></i>Weak — Deadlocks</div>
+            <div style="display:flex; align-items:center; gap:10px; font-family:'JetBrains Mono',monospace; font-size:12px; color:var(--text-muted);"><i style="width:9px;height:9px;border-radius:50%;background:var(--node-skipped);display:inline-block;"></i>Skipped — Paging</div>
+            <div style="display:flex; align-items:center; gap:10px; font-family:'JetBrains Mono',monospace; font-size:12px; color:var(--text-muted);"><i style="width:9px;height:9px;border-radius:50%;background:var(--node-insufficient);display:inline-block;"></i>Insufficient — TCP/IP</div>
+          </div>
+        </div>
+        <div class="textcol">
+          <div class="eyebrow">02 · CONCEPT-LEVEL DIAGNOSIS</div>
+          <h3>Find Exactly Where You Stand — Down to the Concept</h3>
+          <p>Knowing you're "weak in Operating Systems" isn't specific enough to act on. What actually helps is knowing which one concept isn't solid.</p>
+          <p><span class="placeholder">[Diagnostic Name]</span> diagnoses your preparation down to the individual concept, and classifies each one clearly — so "weak" always means something specific and actionable.</p>
+        </div>
+      </div>
+    </div>
+
+    <!-- Feature 3 -->
+    <div class="feature-block">
+      <div class="feature-row">
+        <div class="visual">
+          <svg width="220" height="180" viewBox="0 0 220 180">
+            <circle cx="110" cy="24" r="9" fill="var(--accent-gold)"/>
+            <path d="M110,33 L60,72 M110,33 L110,72 M110,33 L160,72" stroke="var(--bg-panel-line)" stroke-width="2"/>
+            <circle cx="60" cy="80" r="7" fill="var(--node-strong)"/>
+            <circle cx="110" cy="80" r="7" fill="var(--node-weak)"/>
+            <circle cx="160" cy="80" r="7" fill="var(--node-average)"/>
+            <path d="M60,87 L40,130 M60,87 L75,130 M110,87 L110,130 M160,87 L145,130 M160,87 L180,130" stroke="var(--bg-panel-line)" stroke-width="1.5"/>
+            <circle cx="40" cy="136" r="5" fill="var(--node-strong)"/>
+            <circle cx="75" cy="136" r="5" fill="var(--node-average)"/>
+            <circle cx="110" cy="136" r="5" fill="var(--node-weak)"/>
+            <circle cx="145" cy="136" r="5" fill="var(--node-skipped)"/>
+            <circle cx="180" cy="136" r="5" fill="var(--node-strong)"/>
+          </svg>
+        </div>
+        <div class="textcol">
+          <div class="eyebrow">03 · DIMENSION-FIRST KNOWLEDGE MODEL</div>
+          <h3>Understand the Subject, Not Just the Syllabus</h3>
+          <p>A syllabus is organized for teaching — chapter by chapter. It doesn't show how concepts actually relate, or why struggling with one topic often means struggling with several others that depend on it.</p>
+          <p><span class="placeholder">[Diagnostic Name]</span> structures every subject as Dimensions → Themes → Atomic Topics, revealing which foundational concepts are quietly holding back your progress elsewhere.</p>
+        </div>
+      </div>
+    </div>
+
+    <!-- Feature 4 -->
+    <div class="feature-block">
+      <div class="feature-row reverse">
+        <div class="visual">
+          <svg width="220" height="180" viewBox="0 0 220 180">
+            <path class="edge" d="M110,30 L60,80"/><path class="edge" d="M110,30 L160,80"/>
+            <path class="edge" d="M60,80 L45,130"/><path class="edge" d="M60,80 L90,130"/>
+            <path class="edge" d="M160,80 L145,130"/><path class="edge" d="M160,80 L175,130"/>
+            <circle class="node-circle" cx="110" cy="30" r="10" fill="var(--node-average)"/>
+            <circle class="node-circle" cx="60" cy="80" r="8" fill="var(--node-strong)"/>
+            <circle class="node-circle" cx="160" cy="80" r="8" fill="var(--node-weak)"/>
+            <circle class="node-circle" cx="45" cy="130" r="6" fill="var(--node-strong)"/>
+            <circle class="node-circle" cx="90" cy="130" r="6" fill="var(--node-average)"/>
+            <circle class="node-circle" cx="145" cy="130" r="6" fill="var(--node-weak)"/>
+            <circle class="node-circle" cx="175" cy="130" r="6" fill="var(--node-skipped)"/>
+          </svg>
+        </div>
+        <div class="textcol">
+          <div class="eyebrow">04 · VISUAL MASTERY MAP</div>
+          <h3>See Your Knowledge, Not Just Your Score</h3>
+          <p>A percentage or a list of scores is flat. <span class="placeholder">[Diagnostic Name]</span> turns your results into a visual mastery map — every dimension, theme, and atomic topic laid out together, color-coded by how well you understand it.</p>
+          <p>Explore the map directly: zoom into a weak area, or trace a concept to see what it connects to and depends on.</p>
+        </div>
+      </div>
+    </div>
+
+    <!-- Feature 5 -->
+    <div class="feature-block">
+      <div class="feature-row">
+        <div class="visual">
+          <svg width="220" height="140" viewBox="0 0 220 140">
+            <path d="M20,110 Q70,20 110,70 T200,30" fill="none" stroke="var(--bg-panel-line)" stroke-width="2" stroke-dasharray="4 6"/>
+            <circle cx="20" cy="110" r="7" fill="var(--node-weak)"/>
+            <circle cx="90" cy="55" r="7" fill="var(--node-average)"/>
+            <circle cx="150" cy="60" r="7" fill="var(--node-average)"/>
+            <circle cx="200" cy="30" r="9" fill="var(--node-strong)"/>
+          </svg>
+        </div>
+        <div class="textcol">
+          <div class="eyebrow">05 · PERSONALIZED LEARNING PATH</div>
+          <h3>Know Exactly What to Study Next</h3>
+          <p>Not every weak topic matters equally — some are isolated, while others are foundational to several other concepts.</p>
+          <p><span class="placeholder">[Diagnostic Name]</span> uses your diagnostic results and concept dependencies to build a prioritized path — starting with what will unblock the most progress, not just what scored lowest.</p>
+        </div>
+      </div>
+    </div>
+
+    <!-- Feature 6 -->
+    <div class="feature-block">
+      <div class="feature-row reverse">
+        <div class="visual">
+          <svg width="70" height="70" viewBox="0 0 70 70">
+            <path d="M35,4 L41,26 L63,32 L41,38 L35,60 L29,38 L7,32 L29,26 Z" fill="var(--accent-gold)" opacity="0.9"/>
+          </svg>
+        </div>
+        <div class="textcol">
+          <div class="eyebrow">06 · AI-POWERED INSIGHTS</div>
+          <h3>Turning Your Diagnostic Data Into a Clear Next Step</h3>
+          <p>Diagnostic data on its own — five mastery states across dozens of concepts — can be a lot to interpret alone. <span class="placeholder">[Diagnostic Name]</span> uses AI-assisted analysis to turn that evidence into clear, specific recommendations.</p>
+          <p>This isn't a generic AI summary. It's grounded entirely in your own diagnostic responses.</p>
+        </div>
+      </div>
+    </div>
+
+  </div>
+</section>
+
+<!-- ================= SUPPORTING FEATURES ================= -->
+<section>
+  <div class="wrap">
+    <div class="section-head center">
+      <h2>Built for How You Actually Study</h2>
+      <p class="section-sub">Small things that remove friction — so the diagnostic fits into your schedule, not the other way around.</p>
+    </div>
+    <div class="support-grid">
+      <div class="support-card">
+        <div class="icon-box" aria-hidden="true"><svg viewBox="0 0 24 24" fill="none" stroke="var(--accent-gold)" stroke-width="1.8"><path d="M6 4h10l3 3v13H6z"/><path d="M9 4v5h6V4M9 16h6"/></svg></div>
+        <h3>Pick Up Right Where You Left Off</h3>
+        <p>Every response is saved automatically. Pause between classes or later in the day, and resume exactly where you stopped.</p>
+      </div>
+      <div class="support-card">
+        <div class="icon-box" aria-hidden="true"><svg viewBox="0 0 24 24" fill="none" stroke="var(--accent-gold)" stroke-width="1.8"><circle cx="12" cy="12" r="8.5"/><path d="M12 7v5l3 2"/></svg></div>
+        <h3>One Question at a Time. No Timer Pressure.</h3>
+        <p>Questions are presented one at a time, without a countdown clock — the goal is an honest read of your understanding, not a test of speed.</p>
+      </div>
+      <div class="support-card">
+        <div class="icon-box" aria-hidden="true"><svg viewBox="0 0 24 24" fill="none" stroke="var(--accent-gold)" stroke-width="1.8"><path d="M8 5L4 12l4 7M16 5l4 7-4 7M13 4l-2 16"/></svg></div>
+        <h3>Code-Aware Questions, Where the Subject Needs Them</h3>
+        <p>For code-based topics, questions engage with actual code — reading, tracing, and reasoning through it, the same way you'd encounter it in practice.</p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ================= HOW IT WORKS ================= -->
+<section class="alt" id="how-it-works">
+  <div class="wrap">
+    <div class="section-head center">
+      <h2>Three Steps to a Clear Picture of Where You Stand</h2>
+      <p class="section-sub">No lengthy setup. Just answer, review, and know what to do next.</p>
+    </div>
+    <div class="steps-row">
+      <div class="step-card">
+        <div class="step-num">1</div>
         <h3>Answer at Your Own Pace</h3>
         <p>Work through questions one at a time, with no timer and no pressure to rush. Pause and resume whenever you need to.</p>
       </div>
-      <div class="step">
+      <div class="step-card">
+        <div class="step-num">2</div>
         <h3>Get Your Concept-Level Mastery Map</h3>
         <p>Your responses are analyzed for evidence of real understanding and mapped across every dimension, theme, and atomic topic.</p>
       </div>
-      <div class="step">
+      <div class="step-card">
+        <div class="step-num">3</div>
         <h3>Follow Your Personalized Learning Path</h3>
         <p>Based on your diagnosed gaps and how concepts depend on each other, get a clear, prioritized starting point.</p>
       </div>
@@ -146,52 +330,62 @@
   </div>
 </section>
 
-<section class="founder-note">
+<!-- ================= FOUNDER NOTE ================= -->
+<section>
   <div class="wrap">
-    <h2>Why We Built This</h2>
-    <p>Every year, thousands of talented engineering students graduate with real potential. Many of them don't struggle because they lack intelligence or effort — they struggle because they lack guidance, exposure, and an honest sense of where they actually stand.</p>
-    <p>At CSLabs, we started from a simple belief: education should do more than help someone earn a degree. It should help them genuinely understand their subject, think clearly, and build the confidence to back it up — whether that's for GATE, a technical interview, research, or a career in software or AI.</p>
-    <p>This diagnostic is where that belief starts. Before guidance or a learning path can actually help, you need an honest, individual picture of what you understand and what you don't — not a score, not a syllabus checklist, but a real read on your concept-level understanding. That's what we set out to build first.</p>
-    <p>We're still early, and we're building this carefully — testing it with real students, and shaping it around actual diagnostic data rather than assumptions. If you try it, we'd genuinely like to know what you think. At this stage, feedback shapes the product more than anything else could.</p>
-    <p class="signature">— <span class="placeholder">[Founder Name]</span>, Founder, CSLabs</p>
-  </div>
-</section>
-
-<section class="faq">
-  <div class="wrap">
-    <h2>A Few Things Students Usually Ask</h2>
-
-    <div class="faq-item">
-      <h3>Is this only for C programming, or does it cover other subjects too?</h3>
-      <p>It covers Core CS subjects broadly — including DSA, OS, DBMS, OOP, and more. Programming languages like C are supported where a subject requires code-based questions, but the diagnostic isn't limited to any single language or topic.</p>
+    <div class="section-head center">
+      <h2>Why We Built This</h2>
     </div>
-    <div class="faq-item">
-      <h3>Is this specifically for GATE preparation?</h3>
-      <p>Right now, the diagnostic is focused on GATE-relevant Core CS subjects. It's built on the same underlying concept structure we'll be extending to technical interviews, PYQs, and other areas over time — so it's designed to grow with your preparation, not just one exam.</p>
-    </div>
-    <div class="faq-item">
-      <h3>How long does the diagnostic take?</h3>
-      <p>It depends on how many subjects and concepts you choose to cover, since there's no fixed timer per question. Most students complete a subject-level diagnostic in a single sitting or across two to three shorter sessions, using auto-save to pick up where they left off.</p>
-    </div>
-    <div class="faq-item">
-      <h3>Is this free?</h3>
-      <p>Yes, starting the diagnostic is free.</p>
-    </div>
-    <div class="faq-item">
-      <h3>Will this replace my regular classes or coaching?</h3>
-      <p>No — it's designed to work alongside whatever preparation you're already doing. Classes and practice sets help you cover material; this is meant to show you, individually, which parts of that material you've actually understood.</p>
-    </div>
-    <div class="faq-item">
-      <h3>What if I don't finish in one sitting?</h3>
-      <p>Your progress is saved automatically as you go. You can close the diagnostic anytime and resume later from exactly where you left off.</p>
-    </div>
-    <div class="faq-item">
-      <h3>Do I need to prepare or revise before taking the diagnostic?</h3>
-      <p>No preparation is needed. In fact, taking it before revising can be more useful — it gives you an honest starting picture, so your revision time goes toward what actually needs it.</p>
+    <div class="founder-card">
+      <p>Every year, thousands of talented engineering students graduate with real potential. Many of them don't struggle because they lack intelligence or effort — they struggle because they lack guidance, exposure, and an honest sense of where they actually stand.</p>
+      <p>At CSLabs, we started from a simple belief: education should do more than help someone earn a degree. It should help them genuinely understand their subject, think clearly, and build the confidence to back it up — whether that's for GATE, a technical interview, research, or a career in software or AI.</p>
+      <p>This diagnostic is where that belief starts. Before guidance or a learning path can actually help, you need an honest, individual picture of what you understand and what you don't — not a score, not a syllabus checklist, but a real read on your concept-level understanding. That's what we set out to build first.</p>
+      <p>We're still early, and we're building this carefully — testing it with real students, and shaping it around actual diagnostic data rather than assumptions. If you try it, we'd genuinely like to know what you think. At this stage, feedback shapes the product more than anything else could.</p>
+      <div class="founder-sign">— <span class="placeholder">Founder Name</span>, Founder, CSLabs</div>
     </div>
   </div>
 </section>
 
+<!-- ================= FAQ ================= -->
+<section class="alt">
+  <div class="wrap">
+    <div class="section-head center">
+      <h2>A Few Things Students Usually Ask</h2>
+    </div>
+    <div class="faq-list">
+      <details>
+        <summary>Is this only for C programming, or does it cover other subjects too?</summary>
+        <p>It covers Core CS subjects broadly — including DSA, OS, DBMS, OOP, and more. Programming languages like C are supported where a subject requires code-based questions, but the diagnostic isn't limited to any single language or topic.</p>
+      </details>
+      <details>
+        <summary>Is this specifically for GATE preparation?</summary>
+        <p>Right now, the diagnostic is focused on GATE-relevant Core CS subjects. It's built on the same underlying concept structure we'll be extending to technical interviews, PYQs, and other areas over time — so it's designed to grow with your preparation, not just one exam.</p>
+      </details>
+      <details>
+        <summary>How long does the diagnostic take?</summary>
+        <p>It depends on how many subjects and concepts you choose to cover, since there's no fixed timer per question. Most students complete a subject-level diagnostic in a single sitting or across two to three shorter sessions, using auto-save to pick up where they left off.</p>
+      </details>
+      <details>
+        <summary>Is this free?</summary>
+        <p>Yes, starting the diagnostic is free.</p>
+      </details>
+      <details>
+        <summary>Will this replace my regular classes or coaching?</summary>
+        <p>No — it's designed to work alongside whatever preparation you're already doing. Classes and practice sets help you cover material; this is meant to show you, individually, which parts of that material you've actually understood.</p>
+      </details>
+      <details>
+        <summary>What if I don't finish in one sitting?</summary>
+        <p>Your progress is saved automatically as you go. You can close the diagnostic anytime and resume later from exactly where you left off.</p>
+      </details>
+      <details>
+        <summary>Do I need to prepare or revise before taking the diagnostic?</summary>
+        <p>No preparation is needed. In fact, taking it before revising can be more useful — it gives you an honest starting picture, so your revision time goes toward what actually needs it.</p>
+      </details>
+    </div>
+  </div>
+</section>
+
+<!-- ================= FINAL CTA ================= -->
 <section class="final-cta">
   <div class="wrap">
     <h2>Find Out Exactly Where You Stand — For Free</h2>
