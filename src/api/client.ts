@@ -6,7 +6,7 @@ import axios from "axios";
  * every router is mounted under in main.py.
  */
 export const apiClient = axios.create({
-  // baseURL: "https://cslabs-diagnostic-tool.onrender.com/api",
-  baseURL: "http://localhost:8000/api",
+  baseURL: "https://cslabs-diagnostic-tool.onrender.com/api",
+  // baseURL: "http://localhost:8000/api",
   headers: { "Content-Type": "application/json" },
 });
