@@ -1,13 +1,13 @@
 :root{
-    --bg: #fffafa;
-    --bg-alt: #fff5f6;
+    --bg: #fafbff;
+    --bg-alt: #f5f8ff;
     --bg-panel: #ffffff;
-    --bg-panel-line: #ead7da;
-    --text-primary: #24181a;
-    --text-muted: #6f5e62;
-    --text-faint: #98858a;
-    --accent-gold: #a6192e;
-    --accent-gold-dim: #c06a78;
+    --bg-panel-line: #d7ddea;
+    --text-primary: #181c24;
+    --text-muted: #5e656f;
+    --text-faint: #858d98;
+    --accent-gold: #1946a6;
+    --accent-gold-dim: #6a86c0;
     --node-strong: #229a70;
     --node-average: #d98b16;
     --node-weak: #d33b4f;
@@ -46,8 +46,8 @@
     font-size: 12px;
     letter-spacing: 0.06em;
     color: var(--accent-gold);
-    background: rgba(166,25,46,0.07);
-    border: 1px solid rgba(166,25,46,0.20);
+    background: rgba(25,70,166,0.07);
+    border: 1px solid rgba(25,70,166,0.20);
     padding: 6px 13px;
     border-radius: 100px;
     margin-bottom: 22px;
@@ -57,7 +57,7 @@
     width: 6px; height: 6px;
     border-radius: 50%;
     background: var(--accent-gold);
-    box-shadow: 0 0 0 3px rgba(166,25,46,0.13);
+    box-shadow: 0 0 0 3px rgba(25,70,166,0.13);
   }
 
   .btn{
@@ -78,20 +78,20 @@
   .btn-primary{
     background: var(--accent-gold);
     color: #ffffff;
-    box-shadow: 0 10px 30px -8px rgba(166,25,46,0.28);
+    box-shadow: 0 10px 30px -8px rgba(25,70,166,0.28);
   }
-  .btn-primary:hover{ transform: translateY(-2px); box-shadow: 0 14px 34px -8px rgba(166,25,46,0.34); }
+  .btn-primary:hover{ transform: translateY(-2px); box-shadow: 0 14px 34px -8px rgba(25,70,166,0.34); }
   .btn-secondary{
     background: transparent;
     color: var(--text-primary);
     border: 1px solid var(--bg-panel-line);
   }
-  .btn-secondary:hover{ background: rgba(166,25,46,0.045); transform: translateY(-2px); }
+  .btn-secondary:hover{ background: rgba(25,70,166,0.045); transform: translateY(-2px); }
 
   /* ---------- NAV ---------- */
   .navbar{
     position: sticky; top: 0; z-index: 50;
-    background: rgba(255,250,250,0.90);
+    background: rgba(250,251,255,0.90);
     backdrop-filter: blur(10px);
     border-bottom: 1px solid var(--bg-panel-line);
   }
@@ -162,7 +162,7 @@
   }
   .problem-card .mark{
     width: 34px; height:34px; border-radius:9px;
-    background: rgba(166,25,46,0.07); border:1px solid rgba(166,25,46,0.18);
+    background: rgba(25,70,166,0.07); border:1px solid rgba(25,70,166,0.18);
     display:flex; align-items:center; justify-content:center;
     margin-bottom: 18px;
   }
@@ -201,6 +201,70 @@
 
   .feature-block + .feature-block{ margin-top: 88px; }
 
+  /* ---------- FEATURES GRID (scattered "flow" layout) ----------
+     Replaces the old alternating full-width feature-row stack. Cards sit
+     in a 3-col grid with a small deterministic per-card offset (not true
+     randomness -- fixed values, same every load) so the layout reads as
+     "hand-placed" rather than chaotic, per the "playful without losing
+     seriousness" brief. A dotted SVG line + node dots behind the cards
+     (z-index 1, cards at z-index 2) connects them 1->6 in reading order,
+     echoing the product's own node-graph/mastery-map visual motif. */
+  .features-grid{
+    position: relative;
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    column-gap: 40px;
+    row-gap: 64px;
+    padding: 24px 8px 40px;
+  }
+  .feature-card{
+    position: relative;
+    z-index: 2;
+    background: var(--bg-panel);
+    border: 1px solid var(--bg-panel-line);
+    border-radius: 18px;
+    padding: 28px;
+    min-height: 360px;
+    display: flex;
+    flex-direction: column;
+    box-shadow: 0 8px 25px rgba(22,53,112,0.035);
+    transition: transform 0.2s ease, box-shadow 0.2s ease;
+  }
+  .feature-card:hover{ box-shadow: 0 6px 16px rgba(0,0,0,.08); }
+  /* .visual and .textcol keep their existing styling (icon box, h3, p) --
+     just resized/unset here since cards are compact, not full rows. */
+  .feature-card .visual{
+    height: 96px; border: none; background: none; border-radius: 0;
+    margin-bottom: 8px; flex-shrink: 0;
+  }
+  .feature-card .textcol{ flex: 1; }
+  .feature-card .textcol p{ font-size: 14.5px; }
+
+  /* Subtle, fixed per-card jitter -- max ~14px in any direction */
+  .feature-card-1{ transform: translate(-8px, -6px); }
+  .feature-card-2{ transform: translate(10px, 14px); }
+  .feature-card-3{ transform: translate(-6px, 10px); }
+  .feature-card-4{ transform: translate(8px, -12px); }
+  .feature-card-5{ transform: translate(-10px, 6px); }
+  .feature-card-6{ transform: translate(6px, -8px); }
+  /* Hover keeps each card's own offset, just lifts it slightly */
+  .feature-card-1:hover{ transform: translate(-8px, -10px); }
+  .feature-card-2:hover{ transform: translate(10px, 10px); }
+  .feature-card-3:hover{ transform: translate(-6px, 6px); }
+  .feature-card-4:hover{ transform: translate(8px, -16px); }
+  .feature-card-5:hover{ transform: translate(-10px, 2px); }
+  .feature-card-6:hover{ transform: translate(6px, -12px); }
+
+  .features-connector{
+    position: absolute;
+    inset: 0;
+    width: 100%;
+    height: 100%;
+    z-index: 1;
+    pointer-events: none;
+  }
+
+
   /* ---------- SUPPORTING FEATURES ---------- */
   .support-grid{ display:grid; grid-template-columns: repeat(3, 1fr); gap: 24px; }
   .support-card{
@@ -209,7 +273,7 @@
   }
   .support-card .icon-box{
     width:44px; height:44px; border-radius:11px;
-    background: rgba(166,25,46,0.07); border:1px solid rgba(166,25,46,0.18);
+    background: rgba(25,70,166,0.07); border:1px solid rgba(25,70,166,0.18);
     display:flex; align-items:center; justify-content:center; margin-bottom:18px;
   }
   .support-card .icon-box svg{ width:21px; height:21px; }
@@ -221,7 +285,7 @@
   .step-card{ position:relative; }
   .step-num{
     font-family:'JetBrains Mono', monospace; font-size:13px; color:var(--accent-gold);
-    border:1px solid rgba(166,25,46,0.20); background:rgba(166,25,46,0.07);
+    border:1px solid rgba(25,70,166,0.20); background:rgba(25,70,166,0.07);
     width:30px; height:30px; border-radius:50%; display:flex; align-items:center; justify-content:center;
     margin-bottom:18px;
   }
@@ -241,7 +305,7 @@
     font-family: Georgia, 'Times New Roman', serif;
     font-size: 64px;
     line-height: .55;
-    color: #efc1c8;
+    color: #c1d0ef;
     margin-bottom: 20px;
     font-weight: 700;
   }
@@ -267,7 +331,7 @@
   /* ---------- FINAL CTA ---------- */
   .final-cta{
     text-align:center;
-    background: radial-gradient(120% 160% at 50% 0%, #fff0f2 0%, var(--bg) 60%);
+    background: radial-gradient(120% 160% at 50% 0%, #f0f5ff 0%, var(--bg) 60%);
     border-top: 1px solid var(--bg-panel-line);
     border-bottom: 1px solid var(--bg-panel-line);
   }
@@ -280,7 +344,7 @@
 
   /* ---------- REVIEW NOTE BANNER ---------- */
   .review-banner{
-    background: #fff1f3; border-bottom:1px solid #efd0d5; color:#8d1b30;
+    background: #f1f5ff; border-bottom:1px solid #d0daef; color:#1b438d;
     font-family:'JetBrains Mono', monospace; font-size:12.5px; text-align:center; padding:10px 16px;
   }
 
@@ -290,9 +354,21 @@
     .map-wrap{ order:-1; height:380px; }
     section{ padding:64px 0; }
     .founder-card{ padding: 28px; }
+    /* Scattered card layout doesn't hold up at narrow widths -- collapse to
+       a plain single-column stack, no jitter, no connector line, same
+       pattern as every other section's mobile fallback above. */
+    .features-grid{ grid-template-columns: 1fr; row-gap: 32px; padding: 0; }
+    .feature-card{ min-height: auto; }
+    .feature-card-1, .feature-card-2, .feature-card-3,
+    .feature-card-4, .feature-card-5, .feature-card-6,
+    .feature-card-1:hover, .feature-card-2:hover, .feature-card-3:hover,
+    .feature-card-4:hover, .feature-card-5:hover, .feature-card-6:hover{
+      transform: none;
+    }
+    .features-connector{ display: none; }
   }
 
-  .map-wrap{box-shadow:0 18px 45px rgba(112,22,38,0.08);}
-  .problem-card,.visual,.support-card,.founder-card,details{box-shadow:0 8px 25px rgba(112,22,38,0.035);}
-  .btn-primary{background:linear-gradient(135deg,#c92d45,#a6192e);}
+  .map-wrap{box-shadow:0 18px 45px rgba(22,53,112,0.08);}
+  .problem-card,.visual,.support-card,.founder-card,details{box-shadow:0 8px 25px rgba(22,53,112,0.035);}
+  .btn-primary{background:linear-gradient(135deg,#2d5fc9,#1946a6);}
   .btn-secondary{color:var(--text-primary);border-color:var(--bg-panel-line);background:#fff;}
