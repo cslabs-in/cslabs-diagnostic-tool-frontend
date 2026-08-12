@@ -17,6 +17,7 @@
   verbatim, unprocessed, which would skip that pipeline entirely.
 -->
 </head>
+<body>
 
 <div class="review-banner">DRAFT FOR REVIEW — placeholder product name shown in gold dashed text — not final copy for images/screenshots</div>
 
@@ -95,22 +96,22 @@
     </div>
 
     <div class="problem-grid">
-      <div class="problem-card">
+      <div class="problem-card reveal">
         <div class="mark" aria-hidden="true"><svg viewBox="0 0 24 24" fill="none" stroke="var(--accent-gold)" stroke-width="1.8"><path d="M4 19V10M10 19V5M16 19v-7M22 19H2"/></svg></div>
         <h3>Hours of study don't always translate to visible progress.</h3>
         <p>You cover a topic, practice a few problems, and move on. But there's rarely a clear way to confirm whether it's actually sunk in — until a later test brings back something you thought you already knew.</p>
       </div>
-      <div class="problem-card">
+      <div class="problem-card reveal">
         <div class="mark" aria-hidden="true"><svg viewBox="0 0 24 24" fill="none" stroke="var(--accent-gold)" stroke-width="1.8"><circle cx="12" cy="12" r="8.5"/><path d="M12 7v5l3 2"/></svg></div>
         <h3>Marks and real understanding aren't always the same thing.</h3>
         <p>It's possible to clear a test with a good score, and still find yourself unsure when asked to explain the same concept out loud — in a viva, an interview, or a technical discussion. Recall and understanding are measured differently, but most tests only check one of them.</p>
       </div>
-      <div class="problem-card">
+      <div class="problem-card reveal">
         <div class="mark" aria-hidden="true"><svg viewBox="0 0 24 24" fill="none" stroke="var(--accent-gold)" stroke-width="1.8"><path d="M7 7h10M7 12h7M7 17h10"/><path d="M4 4h16v16H4z"/></svg></div>
         <h3>The more you revise, the harder it gets to tell "familiar" from "understood."</h3>
         <p>After enough repetition, almost everything starts to feel comfortable. Lectures, notes, and practice sets are designed to help you cover ground — but they don't tell you, individually, which of the hundred concepts you've covered are actually solid, and which just feel familiar because you've seen them often.</p>
       </div>
-      <div class="problem-card">
+      <div class="problem-card reveal">
         <div class="mark" aria-hidden="true"><svg viewBox="0 0 24 24" fill="none" stroke="var(--accent-gold)" stroke-width="1.8"><circle cx="12" cy="12" r="8.5"/><path d="M12 7v10M7 12h10"/></svg></div>
         <h3>Without a clear picture, everything feels equally important.</h3>
         <p>When you don't know exactly which concepts are weak, it's hard to prioritize. You end up spending equal time everywhere — revising what you already know well, and unintentionally skipping what actually needs the work.</p>
@@ -122,29 +123,29 @@
 </section>
 
 <!-- ================= SOLUTION ================= -->
-<section>
+<section class="tone-panel">
   <div class="wrap">
     <div class="eyebrow" style="display:flex; margin-left:auto; margin-right:auto; width:fit-content;">THE SOLUTION</div>
     <div class="solution-block">
       <h2 style="margin-bottom:24px;">A Diagnostic Built to Check Understanding — Not Just Track Coverage</h2>
       <p>Most preparation — classes, notes, practice sets, mock tests — is designed to help you cover the syllabus and measure how much you remember. That's valuable, and it's necessary. But it answers a different question than the one that actually matters before an exam or interview: not "how much have I covered," but "what do I genuinely understand, and where exactly am I still weak."</p>
-      <p><span class="placeholder">Veridex</span> is built specifically to answer that second question. Instead of a single score, it looks at the evidence in how you respond — question by question, concept by concept — and builds an individual picture of your understanding: what's genuinely strong, what's average, what's weak, and what hasn't been tested clearly enough to tell either way.</p>
+      <p>Veridex is built specifically to answer that second question. Instead of a single score, it looks at the evidence in how you respond — question by question, concept by concept — and builds an individual picture of your understanding: what's genuinely strong, what's average, what's weak, and what hasn't been tested clearly enough to tell either way.</p>
       <p>The result isn't another score to track. It's a clear, honest map of where you stand today, and exactly what to focus on next.</p>
     </div>
   </div>
 </section>
 
 <!-- ================= FEATURES ================= -->
-<section class="alt">
+<section class="tone-cool">
   <div class="wrap">
     <div class="section-head center" style="max-width:600px;">
       <div class="eyebrow" style="margin-left:auto; margin-right:auto;">WHAT YOU GET</div>
       <h2>Six Ways This Gives You Clarity</h2>
     </div>
 
-    <!-- Feature 1 -->
-    <div class="feature-block">
-      <div class="feature-row">
+    <div class="features-grid">
+      <!-- Feature 1 -->
+      <div class="feature-card feature-card-1 reveal">
         <div class="visual">
           <svg width="180" height="180" viewBox="0 0 180 180">
             <circle cx="90" cy="90" r="60" fill="none" stroke="var(--bg-panel-line)" stroke-width="2"/>
@@ -156,14 +157,12 @@
           <div class="eyebrow">01 · EVIDENCE-BASED MASTERY</div>
           <h3>Know What You Actually Understand</h3>
           <p>A percentage tells you how many answers were correct. It doesn't tell you why — whether you reasoned through the concept, recalled a familiar pattern, or got lucky with the options in front of you.</p>
-          <p><span class="placeholder">Veridex</span> looks deeper than the final answer — examining the evidence in how you respond to assess whether a concept is genuinely understood, not just whether the outcome was correct.</p>
+          <p>Veridex looks deeper than the final answer — examining the evidence in how you respond to assess whether a concept is genuinely understood, not just whether the outcome was correct.</p>
         </div>
       </div>
-    </div>
 
-    <!-- Feature 2 -->
-    <div class="feature-block">
-      <div class="feature-row reverse">
+      <!-- Feature 2 -->
+      <div class="feature-card feature-card-2 reveal">
         <div class="visual">
           <div style="display:flex; flex-direction:column; gap:10px; width:220px;">
             <div style="display:flex; align-items:center; gap:10px; font-family:'JetBrains Mono',monospace; font-size:12px; color:var(--text-muted);"><i style="width:9px;height:9px;border-radius:50%;background:var(--node-strong);display:inline-block;"></i>Strong — Recursion</div>
@@ -177,14 +176,12 @@
           <div class="eyebrow">02 · CONCEPT-LEVEL DIAGNOSIS</div>
           <h3>Find Exactly Where You Stand — Down to the Concept</h3>
           <p>Knowing you're "weak in Operating Systems" isn't specific enough to act on. What actually helps is knowing which one concept isn't solid.</p>
-          <p><span class="placeholder">Veridex</span> diagnoses your preparation down to the individual concept, and classifies each one clearly — so "weak" always means something specific and actionable.</p>
+          <p>Veridex diagnoses your preparation down to the individual concept, and classifies each one clearly — so "weak" always means something specific and actionable.</p>
         </div>
       </div>
-    </div>
 
-    <!-- Feature 3 -->
-    <div class="feature-block">
-      <div class="feature-row">
+      <!-- Feature 3 -->
+      <div class="feature-card feature-card-3 reveal">
         <div class="visual">
           <svg width="220" height="180" viewBox="0 0 220 180">
             <circle cx="110" cy="24" r="9" fill="var(--accent-gold)"/>
@@ -204,14 +201,12 @@
           <div class="eyebrow">03 · DIMENSION-FIRST KNOWLEDGE MODEL</div>
           <h3>Understand the Subject, Not Just the Syllabus</h3>
           <p>A syllabus is organized for teaching — chapter by chapter. It doesn't show how concepts actually relate, or why struggling with one topic often means struggling with several others that depend on it.</p>
-          <p><span class="placeholder">Veridex</span> structures every subject as Dimensions → Themes → Atomic Topics, revealing which foundational concepts are quietly holding back your progress elsewhere.</p>
+          <p>Veridex structures every subject as Dimensions → Themes → Atomic Topics, revealing which foundational concepts are quietly holding back your progress elsewhere.</p>
         </div>
       </div>
-    </div>
 
-    <!-- Feature 4 -->
-    <div class="feature-block">
-      <div class="feature-row reverse">
+      <!-- Feature 4 -->
+      <div class="feature-card feature-card-4 reveal">
         <div class="visual">
           <svg width="220" height="180" viewBox="0 0 220 180">
             <path class="edge" d="M110,30 L60,80"/><path class="edge" d="M110,30 L160,80"/>
@@ -229,15 +224,13 @@
         <div class="textcol">
           <div class="eyebrow">04 · VISUAL MASTERY MAP</div>
           <h3>See Your Knowledge, Not Just Your Score</h3>
-          <p>A percentage or a list of scores is flat. <span class="placeholder">Veridex</span> turns your results into a visual mastery map — every dimension, theme, and atomic topic laid out together, color-coded by how well you understand it.</p>
+          <p>A percentage or a list of scores is flat. Veridex turns your results into a visual mastery map — every dimension, theme, and atomic topic laid out together, color-coded by how well you understand it.</p>
           <p>Explore the map directly: zoom into a weak area, or trace a concept to see what it connects to and depends on.</p>
         </div>
       </div>
-    </div>
 
-    <!-- Feature 5 -->
-    <div class="feature-block">
-      <div class="feature-row">
+      <!-- Feature 5 -->
+      <div class="feature-card feature-card-5 reveal">
         <div class="visual">
           <svg width="220" height="140" viewBox="0 0 220 140">
             <path d="M20,110 Q70,20 110,70 T200,30" fill="none" stroke="var(--bg-panel-line)" stroke-width="2" stroke-dasharray="4 6"/>
@@ -251,14 +244,12 @@
           <div class="eyebrow">05 · PERSONALIZED LEARNING PATH</div>
           <h3>Know Exactly What to Study Next</h3>
           <p>Not every weak topic matters equally — some are isolated, while others are foundational to several other concepts.</p>
-          <p><span class="placeholder">Veridex</span> uses your diagnostic results and concept dependencies to build a prioritized path — starting with what will unblock the most progress, not just what scored lowest.</p>
+          <p>Veridex uses your diagnostic results and concept dependencies to build a prioritized path — starting with what will unblock the most progress, not just what scored lowest.</p>
         </div>
       </div>
-    </div>
 
-    <!-- Feature 6 -->
-    <div class="feature-block">
-      <div class="feature-row reverse">
+      <!-- Feature 6 -->
+      <div class="feature-card feature-card-6 reveal">
         <div class="visual">
           <svg width="70" height="70" viewBox="0 0 70 70">
             <path d="M35,4 L41,26 L63,32 L41,38 L35,60 L29,38 L7,32 L29,26 Z" fill="var(--accent-gold)" opacity="0.9"/>
@@ -267,34 +258,46 @@
         <div class="textcol">
           <div class="eyebrow">06 · AI-POWERED INSIGHTS</div>
           <h3>Turning Your Diagnostic Data Into a Clear Next Step</h3>
-          <p>Diagnostic data on its own — five mastery states across dozens of concepts — can be a lot to interpret alone. <span class="placeholder">Veridex</span> uses AI-assisted analysis to turn that evidence into clear, specific recommendations.</p>
+          <p>Diagnostic data on its own — five mastery states across dozens of concepts — can be a lot to interpret alone. Veridex uses AI-assisted analysis to turn that evidence into clear, specific recommendations.</p>
           <p>This isn't a generic AI summary. It's grounded entirely in your own diagnostic responses.</p>
         </div>
       </div>
+
+      <svg class="features-connector" viewBox="0 0 1080 1300" preserveAspectRatio="none" aria-hidden="true">
+        <path d="M252,44 L830,64 L254,484 L828,462 L250,904 L826,890"
+              fill="none" stroke="var(--accent-gold-dim)" stroke-width="2"
+              stroke-linecap="round" stroke-dasharray="1 9" opacity="0.6"/>
+        <circle cx="252" cy="44" r="5" fill="var(--accent-gold)" opacity="0.55"/>
+        <circle cx="830" cy="64" r="5" fill="var(--accent-gold)" opacity="0.55"/>
+        <circle cx="254" cy="484" r="5" fill="var(--accent-gold)" opacity="0.55"/>
+        <circle cx="828" cy="462" r="5" fill="var(--accent-gold)" opacity="0.55"/>
+        <circle cx="250" cy="904" r="5" fill="var(--accent-gold)" opacity="0.55"/>
+        <circle cx="826" cy="890" r="5" fill="var(--accent-gold)" opacity="0.55"/>
+      </svg>
     </div>
 
   </div>
 </section>
 
 <!-- ================= SUPPORTING FEATURES ================= -->
-<section>
+<section class="tone-panel">
   <div class="wrap">
     <div class="section-head center">
       <h2>Built for How You Actually Study</h2>
       <p class="section-sub">Small things that remove friction — so the diagnostic fits into your schedule, not the other way around.</p>
     </div>
     <div class="support-grid">
-      <div class="support-card">
+      <div class="support-card reveal">
         <div class="icon-box" aria-hidden="true"><svg viewBox="0 0 24 24" fill="none" stroke="var(--accent-gold)" stroke-width="1.8"><path d="M6 4h10l3 3v13H6z"/><path d="M9 4v5h6V4M9 16h6"/></svg></div>
         <h3>Pick Up Right Where You Left Off</h3>
         <p>Every response is saved automatically. Pause between classes or later in the day, and resume exactly where you stopped.</p>
       </div>
-      <div class="support-card">
+      <div class="support-card reveal">
         <div class="icon-box" aria-hidden="true"><svg viewBox="0 0 24 24" fill="none" stroke="var(--accent-gold)" stroke-width="1.8"><circle cx="12" cy="12" r="8.5"/><path d="M12 7v5l3 2"/></svg></div>
         <h3>One Question at a Time. No Timer Pressure.</h3>
         <p>Questions are presented one at a time, without a countdown clock — the goal is an honest read of your understanding, not a test of speed.</p>
       </div>
-      <div class="support-card">
+      <div class="support-card reveal">
         <div class="icon-box" aria-hidden="true"><svg viewBox="0 0 24 24" fill="none" stroke="var(--accent-gold)" stroke-width="1.8"><path d="M8 5L4 12l4 7M16 5l4 7-4 7M13 4l-2 16"/></svg></div>
         <h3>Code-Aware Questions, Where the Subject Needs Them</h3>
         <p>For code-based topics, questions engage with actual code — reading, tracing, and reasoning through it, the same way you'd encounter it in practice.</p>
@@ -304,24 +307,24 @@
 </section>
 
 <!-- ================= HOW IT WORKS ================= -->
-<section class="alt" id="how-it-works">
+<section class="tone-cool" id="how-it-works">
   <div class="wrap">
     <div class="section-head center">
       <h2>Three Steps to a Clear Picture of Where You Stand</h2>
       <p class="section-sub">No lengthy setup. Just answer, review, and know what to do next.</p>
     </div>
     <div class="steps-row">
-      <div class="step-card">
+      <div class="step-card reveal">
         <div class="step-num">1</div>
         <h3>Answer at Your Own Pace</h3>
         <p>Work through questions one at a time, with no timer and no pressure to rush. Pause and resume whenever you need to.</p>
       </div>
-      <div class="step-card">
+      <div class="step-card reveal">
         <div class="step-num">2</div>
         <h3>Get Your Concept-Level Mastery Map</h3>
         <p>Your responses are analyzed for evidence of real understanding and mapped across every dimension, theme, and atomic topic.</p>
       </div>
-      <div class="step-card">
+      <div class="step-card reveal">
         <div class="step-num">3</div>
         <h3>Follow Your Personalized Learning Path</h3>
         <p>Based on your diagnosed gaps and how concepts depend on each other, get a clear, prioritized starting point.</p>
@@ -331,7 +334,7 @@
 </section>
 
 <!-- ================= FOUNDER NOTE ================= -->
-<section>
+<section class="tone-mist">
   <div class="wrap">
     <div class="section-head center">
       <h2>Why We Built This</h2>
@@ -406,5 +409,6 @@
   <div class="wrap">© 2026 CSLabs. All rights reserved.</div>
 </footer>
 
+<script type="module" src="./landing/landing.js"></script>
 </body>
 </html>

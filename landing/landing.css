@@ -1,6 +1,9 @@
 :root{
     --bg: #fafbff;
     --bg-alt: #f5f8ff;
+    --bg-cool: #edf1fa;
+    --bg-mist: #f1f3f6;
+    --bg-footer: #e9ecf4;
     --bg-panel: #ffffff;
     --bg-panel-line: #d7ddea;
     --text-primary: #181c24;
@@ -79,6 +82,8 @@
     background: var(--accent-gold);
     color: #ffffff;
     box-shadow: 0 10px 30px -8px rgba(25,70,166,0.28);
+    position: relative;
+    overflow: hidden;
   }
   .btn-primary:hover{ transform: translateY(-2px); box-shadow: 0 14px 34px -8px rgba(25,70,166,0.34); }
   .btn-secondary{
@@ -114,6 +119,26 @@
      Works" anchor links -- scroll-margin-top keeps the heading clear. */
   #how-it-works{ scroll-margin-top: 88px; }
   section.alt{ background: var(--bg-alt); }
+  /* Section-tone ladder -- gives each section its own identity instead of
+     the old 2-tone alternation, while staying in the same blue family as
+     the accent color for cohesion:
+       Hero            -> --bg      (lightest, first impression)
+       Problem, FAQ     -> --bg-alt  (section.alt, unchanged)
+       Features,
+       How It Works    -> --bg-cool  (tied together tonally since How It
+                                       Works is a recap of Features, per
+                                       landing-page-reference-doc.md §4)
+       Solution,
+       Supporting Feat. -> --bg-panel (pure white "breathing" bands between
+                                       tinted sections)
+       Founder Note    -> --bg-mist  (quieter, desaturated -- a deliberate
+                                       change of register for the "human"
+                                       trust moment)
+       Final CTA       -> deepened accent wash (see .final-cta below)
+       Footer          -> --bg-footer (deepest, closing tone) */
+  section.tone-cool{ background: var(--bg-cool); }
+  section.tone-panel{ background: var(--bg-panel); }
+  section.tone-mist{ background: var(--bg-mist); }
   .section-head{ max-width: 640px; margin-bottom: 48px; }
   .section-head.center{ margin-left:auto; margin-right:auto; text-align:center; }
   h2{ font-size: clamp(26px, 3vw, 36px); line-height:1.2; margin-bottom:14px; }
@@ -159,6 +184,13 @@
   .problem-card{
     background: var(--bg-panel); border:1px solid var(--bg-panel-line);
     border-radius: 16px; padding: 28px;
+    position: relative; overflow: hidden;
+    box-shadow: 0 8px 25px rgba(22,53,112,0.035);
+    transition: transform 0.25s ease, box-shadow 0.25s ease;
+  }
+  .problem-card:hover{
+    transform: translateY(-8px);
+    box-shadow: 0 22px 45px -14px rgba(22,53,112,0.22);
   }
   .problem-card .mark{
     width: 34px; height:34px; border-radius:9px;
@@ -203,21 +235,23 @@
 
   /* ---------- FEATURES GRID (scattered "flow" layout) ----------
      Replaces the old alternating full-width feature-row stack. Cards sit
-     in a 3-col grid with a small deterministic per-card offset (not true
-     randomness -- fixed values, same every load) so the layout reads as
-     "hand-placed" rather than chaotic, per the "playful without losing
-     seriousness" brief. A dotted SVG line + node dots behind the cards
-     (z-index 1, cards at z-index 2) connects them 1->6 in reading order,
-     echoing the product's own node-graph/mastery-map visual motif. */
+     in a 2-col grid (3 rows) with a small deterministic per-card offset
+     (not true randomness -- fixed values, same every load) so the layout
+     reads as "hand-placed" rather than chaotic, per the "playful without
+     losing seriousness" brief. A dotted SVG line + node dots behind the
+     cards (z-index 1, cards at z-index 2) connects them 1->6 in reading
+     order, echoing the product's own node-graph/mastery-map visual motif. */
   .features-grid{
     position: relative;
     display: grid;
-    grid-template-columns: repeat(3, 1fr);
+    grid-template-columns: repeat(2, 1fr);
     column-gap: 40px;
     row-gap: 64px;
     padding: 24px 8px 40px;
   }
   .feature-card{
+    --jx: 0px;
+    --jy: 0px;
     position: relative;
     z-index: 2;
     background: var(--bg-panel);
@@ -227,10 +261,12 @@
     min-height: 360px;
     display: flex;
     flex-direction: column;
+    overflow: hidden;
     box-shadow: 0 8px 25px rgba(22,53,112,0.035);
-    transition: transform 0.2s ease, box-shadow 0.2s ease;
+    transform: translate(var(--jx), var(--jy));
+    transition: transform 0.25s ease, box-shadow 0.25s ease, opacity 0.2s ease;
   }
-  .feature-card:hover{ box-shadow: 0 6px 16px rgba(0,0,0,.08); }
+  .feature-card:hover{ box-shadow: 0 22px 45px -14px rgba(22,53,112,0.28); }
   /* .visual and .textcol keep their existing styling (icon box, h3, p) --
      just resized/unset here since cards are compact, not full rows. */
   .feature-card .visual{
@@ -240,20 +276,18 @@
   .feature-card .textcol{ flex: 1; }
   .feature-card .textcol p{ font-size: 14.5px; }
 
-  /* Subtle, fixed per-card jitter -- max ~14px in any direction */
-  .feature-card-1{ transform: translate(-8px, -6px); }
-  .feature-card-2{ transform: translate(10px, 14px); }
-  .feature-card-3{ transform: translate(-6px, 10px); }
-  .feature-card-4{ transform: translate(8px, -12px); }
-  .feature-card-5{ transform: translate(-10px, 6px); }
-  .feature-card-6{ transform: translate(6px, -8px); }
-  /* Hover keeps each card's own offset, just lifts it slightly */
-  .feature-card-1:hover{ transform: translate(-8px, -10px); }
-  .feature-card-2:hover{ transform: translate(10px, 10px); }
-  .feature-card-3:hover{ transform: translate(-6px, 6px); }
-  .feature-card-4:hover{ transform: translate(8px, -16px); }
-  .feature-card-5:hover{ transform: translate(-10px, 2px); }
-  .feature-card-6:hover{ transform: translate(6px, -12px); }
+  /* Subtle, fixed per-card jitter -- max ~14px in any direction. Stored as
+     custom properties (not a direct transform) so the reveal-on-scroll
+     animation below can compose "jitter position" with "slide-in offset"
+     without the two fighting over the transform property. */
+  .feature-card-1{ --jx: -8px; --jy: -6px; }
+  .feature-card-2{ --jx: 10px; --jy: 14px; }
+  .feature-card-3{ --jx: -6px; --jy: 10px; }
+  .feature-card-4{ --jx: 8px;  --jy: -12px; }
+  .feature-card-5{ --jx: -10px; --jy: 6px; }
+  .feature-card-6{ --jx: 6px;  --jy: -8px; }
+  /* Hover: lift noticeably up from whatever the card's resting jitter position is */
+  .feature-card:hover{ transform: translate(var(--jx), calc(var(--jy) - 10px)); }
 
   .features-connector{
     position: absolute;
@@ -264,12 +298,117 @@
     pointer-events: none;
   }
 
+  /* ---------- SCROLL REVEAL ----------
+     landing.js adds ".reveal" to each card-type element it observes via
+     IntersectionObserver, then adds ".in-view" once that element scrolls
+     into the viewport (see landing.js). Elements start faded + offset
+     downward, then settle into place. Skipped entirely (see the
+     prefers-reduced-motion query below) for anyone who's asked their OS
+     for reduced motion.
+
+     feature-card is a special case: its resting transform is already the
+     per-card jitter position (--jx/--jy) set above, not a plain
+     translateY(0), so its reveal start/end states are written in terms of
+     that same --jx/--jy rather than the generic rule everyone else uses --
+     otherwise the slide-in and the jitter placement would fight over the
+     transform property and one would silently overwrite the other. */
+  .reveal{
+    opacity: 0;
+    transform: translateY(28px);
+    transition: opacity 0.6s ease, transform 0.6s ease;
+  }
+  .reveal.in-view{
+    opacity: 1;
+    transform: translateY(0);
+  }
+  .feature-card.reveal{
+    transform: translate(var(--jx), calc(var(--jy) + 28px));
+  }
+  .feature-card.reveal.in-view{
+    transform: translate(var(--jx), var(--jy));
+  }
+  /* .reveal.in-view is 3 classes deep, which would otherwise out-rank the
+     plain .feature-card:hover lift below once a card has revealed (same
+     specificity as :hover normally, but .in-view has one more class than
+     .feature-card alone). This explicit 4-class override guarantees hover
+     still works after reveal, regardless of source order. */
+  .feature-card.reveal.in-view:hover{
+    transform: translate(var(--jx), calc(var(--jy) - 10px));
+  }
+
+  /* Small stagger per section so cards cascade in rather than popping in
+     together -- each container's cards are its only children, so nth-child
+     addresses them directly in reading order. */
+  .problem-card:nth-child(1){ transition-delay: 0s; }
+  .problem-card:nth-child(2){ transition-delay: .08s; }
+  .problem-card:nth-child(3){ transition-delay: .16s; }
+  .problem-card:nth-child(4){ transition-delay: .24s; }
+  .support-card:nth-child(1){ transition-delay: 0s; }
+  .support-card:nth-child(2){ transition-delay: .08s; }
+  .support-card:nth-child(3){ transition-delay: .16s; }
+  .step-card:nth-child(1){ transition-delay: 0s; }
+  .step-card:nth-child(2){ transition-delay: .08s; }
+  .step-card:nth-child(3){ transition-delay: .16s; }
+  .feature-card-1{ transition-delay: 0s; }
+  .feature-card-2{ transition-delay: .08s; }
+  .feature-card-3{ transition-delay: .16s; }
+  .feature-card-4{ transition-delay: .05s; }
+  .feature-card-5{ transition-delay: .13s; }
+  .feature-card-6{ transition-delay: .21s; }
+
+  @media (prefers-reduced-motion: reduce){
+    .reveal, .feature-card.reveal{
+      opacity: 1 !important;
+      transform: translate(var(--jx, 0px), var(--jy, 0px)) !important;
+      transition: none !important;
+    }
+  }
+
 
   /* ---------- SUPPORTING FEATURES ---------- */
   .support-grid{ display:grid; grid-template-columns: repeat(3, 1fr); gap: 24px; }
   .support-card{
     background: var(--bg-panel); border:1px solid var(--bg-panel-line);
     border-radius: 16px; padding: 28px;
+    position: relative; overflow: hidden;
+    box-shadow: 0 8px 25px rgba(22,53,112,0.035);
+    transition: transform 0.25s ease, box-shadow 0.25s ease;
+  }
+  .support-card:hover{
+    transform: translateY(-8px);
+    box-shadow: 0 22px 45px -14px rgba(22,53,112,0.22);
+  }
+
+  /* ---------- GLOSSY SHEEN ----------
+     Applied to the primary CTA and every panel-style card surface (problem,
+     feature, support) -- a soft diagonal highlight suggesting a raised,
+     tactile surface. Deliberately NOT applied to: step-card (no panel
+     background of its own -- see note above), founder-card and prose
+     sections (gloss would fight with long-form readability/seriousness),
+     or btn-secondary (outline style, a solid sheen reads oddly on a
+     transparent fill). position:relative + overflow:hidden on each target
+     is already set above so this clips cleanly to each one's border-radius.
+
+     Two different tints, not one shared rule: btn-primary sits on a solid
+     accent-blue fill, so a WHITE sheen shows up by contrast. The cards sit
+     on --bg-panel, which is already white -- a white sheen there would be
+     invisible (white on white), so they get a faint accent-blue-tinted
+     sheen instead, which reads against the white card background. */
+  .btn-primary::before{
+    content: "";
+    position: absolute;
+    inset: 0;
+    background: linear-gradient(135deg, rgba(255,255,255,0.55) 0%, rgba(255,255,255,0) 42%);
+    pointer-events: none;
+  }
+  .problem-card::before,
+  .feature-card::before,
+  .support-card::before{
+    content: "";
+    position: absolute;
+    inset: 0;
+    background: linear-gradient(135deg, rgba(25,70,166,0.07) 0%, rgba(25,70,166,0) 45%);
+    pointer-events: none;
   }
   .support-card .icon-box{
     width:44px; height:44px; border-radius:11px;
@@ -282,7 +421,19 @@
 
   /* ---------- HOW IT WORKS ---------- */
   .steps-row{ display:grid; grid-template-columns: repeat(3,1fr); gap:28px; position:relative; }
-  .step-card{ position:relative; }
+  /* Previously plain/borderless content -- now a real panel like the other
+     card types, so hover elevation (below) is actually visible here too. */
+  .step-card{
+    position:relative;
+    background: var(--bg-panel); border:1px solid var(--bg-panel-line);
+    border-radius: 16px; padding: 28px;
+    box-shadow: 0 8px 25px rgba(22,53,112,0.035);
+    transition: transform 0.25s ease, box-shadow 0.25s ease;
+  }
+  .step-card:hover{
+    transform: translateY(-8px);
+    box-shadow: 0 22px 45px -14px rgba(22,53,112,0.22);
+  }
   .step-num{
     font-family:'JetBrains Mono', monospace; font-size:13px; color:var(--accent-gold);
     border:1px solid rgba(25,70,166,0.20); background:rgba(25,70,166,0.07);
@@ -298,6 +449,16 @@
     background: var(--bg-panel); border:1px solid var(--bg-panel-line);
     border-radius: 20px; padding: 44px;
     position: relative;
+    box-shadow: 0 8px 25px rgba(22,53,112,0.035);
+    transition: transform 0.25s ease, box-shadow 0.25s ease;
+  }
+  /* Slightly gentler lift than the compact cards (-5px vs -8px) -- this is
+     a large prose block, not a small tappable-feeling card, so a big lift
+     would look like the whole paragraph is floating rather than a subtle
+     "raised surface" cue. */
+  .founder-card:hover{
+    transform: translateY(-5px);
+    box-shadow: 0 20px 40px -14px rgba(22,53,112,0.2);
   }
   .founder-card::before{
     content:'“';
@@ -318,6 +479,15 @@
   details{
     background: var(--bg-panel); border:1px solid var(--bg-panel-line);
     border-radius: 12px; padding: 18px 22px; margin-bottom:12px;
+    box-shadow: 0 8px 25px rgba(22,53,112,0.035);
+    transition: transform 0.2s ease, box-shadow 0.2s ease;
+  }
+  /* Smaller lift than the other cards (-3px) -- this is a click target
+     (expands/collapses on click), so a large jump right where the cursor
+     is about to click would feel unstable rather than polished. */
+  details:hover{
+    transform: translateY(-3px);
+    box-shadow: 0 14px 28px -10px rgba(22,53,112,0.18);
   }
   summary{
     cursor:pointer; font-family:'Space Grotesk', sans-serif; font-weight:600; font-size:15.5px;
@@ -331,7 +501,7 @@
   /* ---------- FINAL CTA ---------- */
   .final-cta{
     text-align:center;
-    background: radial-gradient(120% 160% at 50% 0%, #f0f5ff 0%, var(--bg) 60%);
+    background: radial-gradient(120% 160% at 50% 0%, #e3ecfc 0%, var(--bg) 62%);
     border-top: 1px solid var(--bg-panel-line);
     border-bottom: 1px solid var(--bg-panel-line);
   }
@@ -340,7 +510,7 @@
   .final-cta .cta-row{ justify-content:center; }
   .final-cta .trust-line{ justify-content:center; margin-top:18px; }
 
-  footer{ padding: 40px 0; text-align:center; color:var(--text-faint); font-size:13px; }
+  footer{ padding: 40px 0; text-align:center; color:var(--text-faint); font-size:13px; background: var(--bg-footer); }
 
   /* ---------- REVIEW NOTE BANNER ---------- */
   .review-banner{
