@@ -4,6 +4,10 @@
 // the *only* state (see the prefers-reduced-motion query in landing.css --
 // there is no JS-only "permanently hidden" state to get stuck in).
 
+import { inject } from '@vercel/analytics';
+
+inject();
+
 const revealEls = document.querySelectorAll('.reveal');
 
 const prefersReducedMotion = window.matchMedia(
