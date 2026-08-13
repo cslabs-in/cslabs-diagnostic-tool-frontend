@@ -5,10 +5,11 @@ import { Button } from "../components/ui/Button";
 import { AnsweredSummaryList } from "../components/diagnostic/AnsweredSummaryList";
 import { ReviewSummarySidebar } from "../components/diagnostic/ReviewSummarySidebar";
 import { useSession } from "../app/SessionContext";
+import { getThemeDisplayName } from "../api/themes";
 
 export function ReviewPage() {
   const navigate = useNavigate();
-  const { questions, answers, goToIndex, completeAndFetchReport } = useSession();
+  const { theme, questions, answers, goToIndex, completeAndFetchReport } = useSession();
 
   const total = questions.length;
   const answeredCount = Object.values(answers).filter(
@@ -45,6 +46,8 @@ export function ReviewPage() {
         />
       }
       onExit={handleExit}
+      themeName={theme ? getThemeDisplayName(theme) : undefined}
+      questionCount={questions.length}
     >
       <div className="mx-auto max-w-2xl space-y-6">
         <div>

@@ -5,11 +5,12 @@ import { QuestionCard } from "../components/diagnostic/QuestionCard";
 import { NavControls } from "../components/diagnostic/NavControls";
 import { DiagnosticGuideSidebar } from "../components/diagnostic/DiagnosticGuideSidebar";
 import { useSession } from "../app/SessionContext";
+import { getThemeDisplayName } from "../api/themes";
 import type { OptionLetter } from "../types/diagnostic";
 
 export function QuizPage() {
   const navigate = useNavigate();
-  const { questions, answers, currentIndex, goToIndex, setAnswer } = useSession();
+  const { theme, questions, answers, currentIndex, goToIndex, setAnswer } = useSession();
 
   const question = questions[currentIndex];
   const total = questions.length;
@@ -54,7 +55,12 @@ export function QuizPage() {
   const percent = Math.round((answeredCount / total) * 100);
 
   return (
-    <DiagnosticLayout sidebar={<DiagnosticGuideSidebar />} onExit={handleExit}>
+    <DiagnosticLayout
+      sidebar={<DiagnosticGuideSidebar />}
+      onExit={handleExit}
+      themeName={theme ? getThemeDisplayName(theme) : undefined}
+      questionCount={questions.length}
+    >
       <div className="mx-auto max-w-2xl space-y-6">
         <Progress
           value={answeredCount}

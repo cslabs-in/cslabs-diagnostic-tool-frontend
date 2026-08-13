@@ -6,10 +6,11 @@ import { ConceptScoreChart } from "../components/report/ConceptScoreChart";
 // import { ConceptGraph } from "../components/report/ConceptGraph";
 import { ReportSidebar } from "../components/report/ReportSidebar";
 import { useSession } from "../app/SessionContext";
+import { getThemeDisplayName } from "../api/themes";
 
 export function ReportPage() {
   const navigate = useNavigate();
-  const { report } = useSession();
+  const { theme, questions, report } = useSession();
 
   // Guarded at the route level by RequireSession (sessionId), but sessionId
   // alone doesn't guarantee `report` is populated (e.g. some future nav
@@ -25,6 +26,8 @@ export function ReportPage() {
     <DiagnosticLayout
       sidebar={<ReportSidebar scores={report.conceptScores} />}
       onExit={() => navigate("/")}
+      themeName={theme ? getThemeDisplayName(theme) : undefined}
+      questionCount={questions.length}
     >
       <div className="mx-auto max-w-2xl space-y-6">
         <div>

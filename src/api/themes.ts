@@ -26,6 +26,13 @@ export interface ThemeQuestionsResult {
   conceptNames: Record<string, string>;
 }
 
+/** Display name for a theme id, as stored in the backend (`theme` column
+ * of diagnostic.concepts): "Grammar", "Data Representation". This is what
+ * the Header shows under "Current Theme". */
+export function getThemeDisplayName(theme: ThemeId): string {
+  return THEME_DB_VALUE[theme];
+}
+
 export async function getThemeQuestions(theme: ThemeId): Promise<ThemeQuestionsResult> {
   const dbTheme = THEME_DB_VALUE[theme];
   const { data } = await apiClient.get<RawThemeResponse>(

@@ -25,7 +25,7 @@ import { Footer } from "./Footer";
  *   </DiagnosticLayout>
  */
 export interface DiagnosticLayoutProps
-  extends Pick<HeaderProps, "title" | "onExit" | "exitLabel" | "rightSlot"> {
+  extends Pick<HeaderProps, "themeName" | "questionCount" | "onExit" | "exitLabel" | "rightSlot"> {
   sidebar?: ReactNode;
   children: ReactNode;
 }
@@ -33,7 +33,8 @@ export interface DiagnosticLayoutProps
 export function DiagnosticLayout({
   sidebar,
   children,
-  title,
+  themeName,
+  questionCount,
   onExit,
   exitLabel,
   rightSlot,
@@ -41,7 +42,8 @@ export function DiagnosticLayout({
   return (
     <div className="flex h-screen flex-col overflow-hidden bg-page-bg">
       <Header
-        title={title}
+        themeName={themeName}
+        questionCount={questionCount}
         onExit={onExit}
         exitLabel={exitLabel}
         rightSlot={rightSlot}
