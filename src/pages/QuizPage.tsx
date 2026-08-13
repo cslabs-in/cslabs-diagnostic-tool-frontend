@@ -52,8 +52,6 @@ export function QuizPage() {
     if (confirmed) navigate("/");
   }
 
-  const percent = Math.round((answeredCount / total) * 100);
-
   return (
     <DiagnosticLayout
       sidebar={<DiagnosticGuideSidebar />}
@@ -65,7 +63,7 @@ export function QuizPage() {
         <Progress
           value={answeredCount}
           max={total}
-          label={`Question ${currentIndex + 1} of ${total} · ${percent}% complete`}
+          label={`Question ${currentIndex + 1} of ${total}`}
         />
 
         <QuestionCard
