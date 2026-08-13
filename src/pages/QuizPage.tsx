@@ -68,20 +68,21 @@ export function QuizPage() {
 
         <QuestionCard
           question={question}
+          number={currentIndex + 1}
           selected={selected}
           onSelect={handleSelect}
-          onSkip={handleSkip}
         />
 
         <NavControls
           onBack={handleBack}
           onNext={goToNext}
+          onSkip={handleSkip}
           canGoBack={currentIndex > 0}
           isLast={currentIndex === total - 1}
         />
 
         <p className="text-center text-xs text-ink-faint">
-          Your progress is saved -- it's safe to close this tab.
+          Your progress is auto-saved -- You can safely leave and resume later.
         </p>
       </div>
     </DiagnosticLayout>
