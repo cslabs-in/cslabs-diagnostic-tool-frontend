@@ -31,7 +31,7 @@ export function OptionList({ options, selected, onSelect }: OptionListProps) {
             className={cn(
               "flex w-full items-center gap-3 rounded-sm border p-4 text-left text-sm transition-colors duration-150",
               isSelected
-                ? "border-mastered-line bg-mastered-bg text-ink"
+                ? "border-mastered bg-mastered-bg text-ink"
                 : "border-border bg-card-bg text-ink hover:bg-page-bg",
             )}
           >

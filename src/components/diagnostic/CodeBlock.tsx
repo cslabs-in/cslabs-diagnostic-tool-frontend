@@ -11,6 +11,10 @@ SyntaxHighlighter.registerLanguage("c", c);
  * stem text. Uses PrismLight (not the full Prism bundle) to keep bundle
  * size down -- only the "c" language is registered, since that's all v1
  * needs.
+ *
+ * The wrapper scrolls horizontally (overflow-x-auto, not hidden) so long
+ * source lines are reachable instead of being clipped; the rounded corners
+ * still clip the scrolled content.
  */
 export interface CodeBlockProps {
   code: string;
@@ -18,7 +22,7 @@ export interface CodeBlockProps {
 
 export function CodeBlock({ code }: CodeBlockProps) {
   return (
-    <div className="overflow-hidden rounded-sm border border-border">
+    <div className="overflow-x-auto rounded-sm border border-border">
       <SyntaxHighlighter
         language="c"
         style={oneLight}
