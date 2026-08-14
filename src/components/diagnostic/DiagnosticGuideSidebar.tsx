@@ -1,4 +1,4 @@
-import { BookOpen, Forward, Heart, Keyboard, Lightbulb, Pencil, Target, User } from "lucide-react";
+import { BookOpen, Forward, Heart, Lightbulb, Pencil, Target, User } from "lucide-react";
 import type { LucideIcon } from "lucide-react";
 import { Card } from "../ui/Card";
 
@@ -33,21 +33,6 @@ interface Tip {
   body: string;
   icon: LucideIcon;
 }
-
-/** Small key-cap chip for the keyboard-shortcuts list. */
-function Kbd({ children }: { children: string }) {
-  return (
-    <kbd className="rounded-sm border border-border bg-untested-bg px-1.5 py-0.5 font-mono text-xs font-medium text-ink">
-      {children}
-    </kbd>
-  );
-}
-
-const SHORTCUTS: Array<{ keys: string[]; action: string }> = [
-  { keys: ["1–4", "A–D"], action: "Answer" },
-  { keys: ["Enter"], action: "Next question" },
-  { keys: ["S"], action: "Skip question" },
-];
 
 const TIPS: Tip[] = [
   {
@@ -97,30 +82,6 @@ export function DiagnosticGuideSidebar() {
           })}
         </ul>
 
-        {/* Keyboard shortcuts, kept permanently visible in the sidebar so
-            the student can check them at any point -- complements the
-            transient tip shown on the first question. */}
-        <div className="border-t border-border pt-4">
-          <p className="flex items-center gap-2 font-semibold text-ink">
-            <Keyboard className="h-5 w-5 shrink-0 text-mastered" aria-hidden="true" />
-            Keyboard shortcuts
-          </p>
-          <ul className="mt-3 space-y-2">
-            {SHORTCUTS.map((row) => (
-              <li key={row.action} className="flex items-center justify-between gap-2">
-                <span className="text-ink-soft">{row.action}</span>
-                <span className="flex items-center gap-1.5">
-                  {row.keys.map((key, i) => (
-                    <span key={key} className="flex items-center gap-1.5">
-                      {i > 0 && <span className="text-xs text-ink-faint">or</span>}
-                      <Kbd>{key}</Kbd>
-                    </span>
-                  ))}
-                </span>
-              </li>
-            ))}
-          </ul>
-        </div>
       </Card>
 
       {/* "Remember" reassurance callout, styled after the Concept Insight

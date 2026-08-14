@@ -6,6 +6,7 @@ import { Progress } from "../components/ui/Progress";
 import { QuestionCard } from "../components/diagnostic/QuestionCard";
 import { NavControls } from "../components/diagnostic/NavControls";
 import { DiagnosticGuideSidebar } from "../components/diagnostic/DiagnosticGuideSidebar";
+import { QuizFooterBar } from "../components/diagnostic/QuizFooterBar";
 import { Button } from "../components/ui/Button";
 import { useSession } from "../app/SessionContext";
 import { getThemeDisplayName } from "../api/themes";
@@ -164,6 +165,7 @@ export function QuizPage() {
       onExit={handleExit}
       themeName={theme ? getThemeDisplayName(theme) : undefined}
       questionCount={questions.length}
+      footer={<QuizFooterBar />}
     >
       <div className="mx-auto max-w-2xl space-y-6">
         <Progress
@@ -186,11 +188,7 @@ export function QuizPage() {
           onSkip={handleSkip}
           canGoBack={currentIndex > 0}
           isLast={currentIndex === total - 1}
-        />        
-
-        <p className="text-center text-xs text-ink-faint">
-          Your progress is auto-saved -- You can safely leave and resume later.
-        </p>
+        />
       </div>
 
       {showCompletion && (

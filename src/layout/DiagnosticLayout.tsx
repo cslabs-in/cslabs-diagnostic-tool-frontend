@@ -32,6 +32,9 @@ export interface DiagnosticLayoutProps
   sidebarAutoHide?: boolean;
   /** Force the sidebar open without hover (QuizPage: first question only). */
   sidebarVisible?: boolean;
+  /** Page-specific footer content (QuizPage: auto-save reassurance +
+   * keyboard-shortcuts legend), rendered above the copyright strip. */
+  footer?: ReactNode;
   children: ReactNode;
 }
 
@@ -39,6 +42,7 @@ export function DiagnosticLayout({
   sidebar,
   sidebarAutoHide = false,
   sidebarVisible = false,
+  footer,
   children,
   themeName,
   questionCount,
@@ -65,7 +69,7 @@ export function DiagnosticLayout({
         <main className="flex-1 overflow-y-auto p-8">{children}</main>
       </div>
 
-      <Footer />
+      <Footer>{footer}</Footer>
     </div>
   );
 }
