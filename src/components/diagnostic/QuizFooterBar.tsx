@@ -1,4 +1,4 @@
-import { CloudCheck, Keyboard } from "lucide-react";
+import { CircleCheckBig, Keyboard } from "lucide-react";
 
 /**
  * QuizFooterBar -- QuizPage's footer-bar content, per the QuizPage design
@@ -29,7 +29,7 @@ export function QuizFooterBar() {
   return (
     <div className="flex flex-wrap items-center justify-between gap-x-6 gap-y-3">
       <div className="flex items-center gap-2">
-        <CloudCheck
+        <CircleCheckBig
           className="h-4 w-4 shrink-0 text-mastered"
           aria-hidden="true"
         />
