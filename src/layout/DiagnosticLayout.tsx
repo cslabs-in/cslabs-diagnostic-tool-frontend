@@ -27,11 +27,18 @@ import { Footer } from "./Footer";
 export interface DiagnosticLayoutProps
   extends Pick<HeaderProps, "themeName" | "questionCount" | "onExit" | "exitLabel" | "rightSlot"> {
   sidebar?: ReactNode;
+  /** Auto-hide the sidebar (QuizPage only): hidden by default, slides in
+   * when the cursor touches the left edge of the screen. */
+  sidebarAutoHide?: boolean;
+  /** Force the sidebar open without hover (QuizPage: first question only). */
+  sidebarVisible?: boolean;
   children: ReactNode;
 }
 
 export function DiagnosticLayout({
   sidebar,
+  sidebarAutoHide = false,
+  sidebarVisible = false,
   children,
   themeName,
   questionCount,
@@ -49,8 +56,12 @@ export function DiagnosticLayout({
         rightSlot={rightSlot}
       />
 
-      <div className="flex flex-1 overflow-hidden">
-        {sidebar && <Sidebar>{sidebar}</Sidebar>}
+      <div className="relative flex flex-1 overflow-hidden">
+        {sidebar && (
+          <Sidebar autoHide={sidebarAutoHide} visible={sidebarVisible}>
+            {sidebar}
+          </Sidebar>
+        )}
         <main className="flex-1 overflow-y-auto p-8">{children}</main>
       </div>
 
