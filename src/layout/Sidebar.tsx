@@ -1,4 +1,5 @@
 import { useState, type ReactNode } from "react";
+import { Grip, Info } from "lucide-react";
 import { cn } from "../lib/cn";
 
 /**
@@ -22,24 +23,40 @@ import { cn } from "../lib/cn";
  *     scrolls as a whole.
  *
  * `autoHide` (QuizPage only): the sidebar normally sits off-screen and
- * slides in when the cursor touches the left edge of the screen, sliding
- * back out when the cursor leaves it. In this mode the sidebar overlays
- * Main (absolute, out of flow) so the quiz content uses the full width
- * while the drawer is closed. `visible` force-opens it without hover --
- * QuizPage keeps it open for the first question only.
+ * overlays Main (absolute, out of flow) so the quiz content uses the full
+ * width while the drawer is closed. Per designs/images/QuizPage_final.png
+ * it opens via an explicit Guide trigger -- a light vertical icon button
+ * (info icon + rotated "Guide" label) on a thin, slightly shaded strip at
+ * the left edge, with a small gray grip icon just above it. The drawer
+ * opens when the cursor is placed on the Guide button and stays open
+ * while the cursor remains on the button or the drawer; clicking the
+ * button pins it open (click again to unpin). The drawer slides out
+ * beside the strip (not under it), so the Guide button stays reachable to
+ * close it again.
+ *
+ * `visible` force-opens the drawer without any trigger -- QuizPage keeps
+ * it open for the first question only, and the Guide trigger (strip +
+ * grip + button) is hidden in that state so it only appears from Question
+ * 2 onward.
  */
 export interface SidebarProps {
   children: ReactNode;
-  /** Auto-hide mode: hidden by default, slides in on left-edge hover,
-   * slides out when the cursor leaves. Overlays Main while closed. */
+  /** Auto-hide mode: hidden by default, opens when the Guide trigger is
+   * hovered (stays open while the cursor is on the button or the drawer)
+   * or clicked to pin (click again to unpin). Overlays Main while
+   * closed. */
   autoHide?: boolean;
-  /** Force the sidebar open regardless of hover. Only meaningful with
-   * `autoHide` (QuizPage shows it on the first question only). */
+  /** Force the sidebar open regardless of the trigger. Only meaningful
+   * with `autoHide` (QuizPage shows it on the first question only); the
+   * Guide trigger is hidden while this is set. */
   visible?: boolean;
 }
 
 export function Sidebar({ children, autoHide = false, visible = false }: SidebarProps) {
-  const [hovered, setHovered] = useState(false);
+  const [open, setOpen] = useState(false);
+  // True while the cursor is over the Guide button or the open drawer; the
+  // drawer stays open until the cursor leaves both (unless click-pinned).
+  const [hovering, setHovering] = useState(false);
 
   // Default pinned mode -- unchanged from before.
   if (!autoHide) {
@@ -50,24 +67,66 @@ export function Sidebar({ children, autoHide = false, visible = false }: Sidebar
     );
   }
 
-  const isOpen = visible || hovered;
+  const isOpen = visible || open || hovering;
 
   return (
     <>
-      {/* Invisible hover zone at the left edge -- opens the drawer when the
-          cursor touches it. No mouse-leave here: opening stays sticky until
-          the cursor actually leaves the drawer itself. */}
-      <div
-        className="hidden min-[821px]:block absolute inset-y-0 left-0 z-40 w-3"
-        onMouseEnter={() => setHovered(true)}
-        aria-hidden="true"
-      />
+      {/* Left-edge drawer strip + Guide trigger -- the only way the drawer
+          opens. The strip is a thin, slightly shaded vertical bar that
+          hints at the drawer behind it; inside it, the small gray grip
+          icon sits just above the Guide button -- info icon + rotated
+          "Guide" label on a light background -- and the pair is centered
+          vertically with a comfortable margin between them. The drawer
+          opens on hover over the button and stays open while the cursor
+          is on the button or the drawer; clicking pins it open (click
+          again to unpin). The strip sits at z-60, above the drawer
+          (z-50), so the Guide button stays clickable even while the
+          closed drawer's tail still overlaps the strip's column. Hidden
+          while `visible` (QuizPage Q1), so it appears from Question 2
+          onward. */}
+      {!visible && (
+        <div className="hidden min-[821px]:flex absolute inset-y-0 left-0 z-60 w-14 flex-col items-center border-r border-border bg-untested-bg">
+          <div className="flex flex-1 flex-col items-center justify-center gap-4">
+            <Grip
+              className="h-4 w-4 shrink-0 text-ink-faint"
+              aria-hidden="true"
+            />
+            <button
+              type="button"
+              onClick={() => setOpen((o) => !o)}
+              onMouseEnter={() => setHovering(true)}
+              onMouseLeave={() => setHovering(false)}
+              aria-expanded={isOpen}
+              aria-controls="diagnostic-guide-drawer"
+              className={cn(
+                "flex flex-col items-center gap-2 rounded-2xl border py-3 border-border bg-mastered-bg px-2 text-mastered shadow-card",
+                "transition-colors duration-150 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-mastered focus-visible:ring-offset-2",
+                isOpen && "border-mastered-line bg-mastered-bg",
+              )}
+            >
+              <Info className="h-4 w-4 mb-2 shrink-0" aria-hidden="true" />
+              {/* Vertical label, read bottom-to-top ("rotated upwards") -- the
+                  classic vertical-tab look from the design reference.
+                  `-rotate-90` (stock utility) instead of writing-mode, which
+                  Tailwind v4.3 doesn't ship. */}
+              <span className="-rotate-90 text-xs font-semibold tracking-wide mb-2">
+                Guide
+              </span>
+            </button>
+          </div>
+        </div>
+      )}
 
+      {/* Slides out beside the strip (left-14 matches the strip's w-14), so
+          the Guide button stays visible and clickable while it's open. The
+          drawer stays open while the cursor is on it (or on the Guide
+          button); leaving both closes it unless it was click-pinned. */}
       <aside
-        onMouseEnter={() => setHovered(true)}
-        onMouseLeave={() => setHovered(false)}
+        id="diagnostic-guide-drawer"
+        onMouseEnter={() => setHovering(true)}
+        onMouseLeave={() => setHovering(false)}
         className={cn(
-          "hidden min-[821px]:block absolute inset-y-0 left-0 z-50 w-80 overflow-y-auto bg-page-bg p-6 shadow-hover",
+          "hidden min-[821px]:block absolute inset-y-0 left-14 z-50 w-80 overflow-y-auto bg-page-bg p-6 shadow-hover",
           "transition-transform duration-200 ease-out motion-reduce:transition-none",
           isOpen ? "translate-x-0" : "-translate-x-full",
         )}
