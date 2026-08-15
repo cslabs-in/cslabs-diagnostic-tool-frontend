@@ -145,7 +145,7 @@ export function QuizPage() {
 
   // Number of distinct concepts in the theme, used by the completion
   // overlay's summary line.
-  const conceptCount = new Set(questions.map((q) => q.conceptId)).size;
+  // const conceptCount = new Set(questions.map((q) => q.conceptId)).size;
 
   // --- Handlers ---
   function handleSelect(letter: OptionLetter) {
