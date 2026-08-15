@@ -35,9 +35,8 @@ import { cn } from "../lib/cn";
  * close it again.
  *
  * `visible` force-opens the drawer without any trigger -- QuizPage keeps
- * it open for the first question only, and the Guide trigger (strip +
- * grip + button) is hidden in that state so it only appears from Question
- * 2 onward.
+ * it open for the first question only. The Guide trigger (strip + grip +
+ * button) is always rendered, including while `visible` is set.
  */
 export interface SidebarProps {
   children: ReactNode;
@@ -47,8 +46,7 @@ export interface SidebarProps {
    * closed. */
   autoHide?: boolean;
   /** Force the sidebar open regardless of the trigger. Only meaningful
-   * with `autoHide` (QuizPage shows it on the first question only); the
-   * Guide trigger is hidden while this is set. */
+   * with `autoHide` (QuizPage shows it on the first question only). */
   visible?: boolean;
 }
 
@@ -81,41 +79,39 @@ export function Sidebar({ children, autoHide = false, visible = false }: Sidebar
           is on the button or the drawer; clicking pins it open (click
           again to unpin). The strip sits at z-60, above the drawer
           (z-50), so the Guide button stays clickable even while the
-          closed drawer's tail still overlaps the strip's column. Hidden
-          while `visible` (QuizPage Q1), so it appears from Question 2
-          onward. */}
-      {!visible && (
-        <div className="hidden min-[821px]:flex absolute inset-y-0 left-0 z-60 w-14 flex-col items-center border-r border-border bg-untested-bg">
-          <div className="flex flex-1 flex-col items-center justify-center gap-4">
-            <Grip
-              className="h-4 w-4 shrink-0 text-ink-faint"
-              aria-hidden="true"
-            />
-            <button
-              type="button"
-              onClick={() => setOpen((o) => !o)}
-              onMouseEnter={() => setHovering(true)}
-              onMouseLeave={() => setHovering(false)}
-              aria-expanded={isOpen}
-              aria-controls="diagnostic-guide-drawer"
-              className={cn(
-                "flex flex-col items-center gap-2 rounded-2xl border py-3 border-border bg-mastered-bg px-2 text-mastered shadow-card",
-                "transition-colors duration-150 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-mastered focus-visible:ring-offset-2",
-                isOpen && "border-mastered-line bg-mastered-bg",
-              )}
-            >
-              <Info className="h-4 w-4 mb-2 shrink-0" aria-hidden="true" />
-              {/* Vertical label, read bottom-to-top ("rotated upwards") -- the
-                  classic vertical-tab look from the design reference.
-                  `-rotate-90` (stock utility) instead of writing-mode, which
-                  Tailwind v4.3 doesn't ship. */}
-              <span className="-rotate-90 text-xs font-semibold tracking-wide mb-2">
-                Guide
-              </span>
-            </button>
-          </div>
+          closed drawer's tail still overlaps the strip's column. Always
+          rendered -- including while `visible` (QuizPage Q1) force-opens
+          the drawer. */}
+      <div className="hidden min-[821px]:flex absolute inset-y-0 left-0 z-60 w-14 flex-col items-center border-r border-border bg-untested-bg">
+        <div className="flex flex-1 flex-col items-center justify-center gap-4">
+          <Grip
+            className="h-4 w-4 shrink-0 text-ink-faint"
+            aria-hidden="true"
+          />
+          <button
+            type="button"
+            onClick={() => setOpen((o) => !o)}
+            onMouseEnter={() => setHovering(true)}
+            onMouseLeave={() => setHovering(false)}
+            aria-expanded={isOpen}
+            aria-controls="diagnostic-guide-drawer"
+            className={cn(
+              "flex flex-col items-center gap-2 rounded-2xl border py-3 border-border bg-mastered-bg px-2 text-mastered shadow-card",
+              "transition-colors duration-150 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-mastered focus-visible:ring-offset-2",
+              isOpen && "border-mastered-line bg-mastered-bg",
+            )}
+          >
+            <Info className="h-4 w-4 mb-2 shrink-0" aria-hidden="true" />
+            {/* Vertical label, read bottom-to-top ("rotated upwards") -- the
+                classic vertical-tab look from the design reference.
+                `-rotate-90` (stock utility) instead of writing-mode, which
+                Tailwind v4.3 doesn't ship. */}
+            <span className="-rotate-90 text-xs font-semibold tracking-wide mb-2">
+              Guide
+            </span>
+          </button>
         </div>
-      )}
+      </div>
 
       {/* Slides out beside the strip (left-14 matches the strip's w-14), so
           the Guide button stays visible and clickable while it's open. The
