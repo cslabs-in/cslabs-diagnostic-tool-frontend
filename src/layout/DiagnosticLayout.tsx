@@ -1,6 +1,6 @@
-import type { ReactNode } from "react";
+import type { ReactNode, Ref } from "react";
 import { Header, type HeaderProps } from "./Header";
-import { Sidebar } from "./Sidebar";
+import { Sidebar, type SidebarHandle } from "./Sidebar";
 import { Footer } from "./Footer";
 
 /**
@@ -32,6 +32,9 @@ export interface DiagnosticLayoutProps
   sidebarAutoHide?: boolean;
   /** Force the sidebar open without hover (QuizPage: first question only). */
   sidebarVisible?: boolean;
+  /** Imperative handle into the sidebar (QuizPage's "G" shortcut toggles
+   * the auto-hide drawer through this). */
+  sidebarRef?: Ref<SidebarHandle>;
   /** Page-specific footer content (QuizPage: auto-save reassurance +
    * keyboard-shortcuts legend), rendered above the copyright strip. */
   footer?: ReactNode;
@@ -42,6 +45,7 @@ export function DiagnosticLayout({
   sidebar,
   sidebarAutoHide = false,
   sidebarVisible = false,
+  sidebarRef,
   footer,
   children,
   themeName,
@@ -62,7 +66,11 @@ export function DiagnosticLayout({
 
       <div className="relative flex flex-1 overflow-hidden">
         {sidebar && (
-          <Sidebar autoHide={sidebarAutoHide} visible={sidebarVisible}>
+          <Sidebar
+            ref={sidebarRef}
+            autoHide={sidebarAutoHide}
+            visible={sidebarVisible}
+          >
             {sidebar}
           </Sidebar>
         )}

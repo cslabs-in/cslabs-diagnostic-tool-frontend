@@ -8,8 +8,9 @@ import { CircleCheckBig, Keyboard } from "lucide-react";
  * strip, so the shortcuts sit in the bottom-right corner of the page.
  *
  * The legend mirrors the keydown handling in QuizPage (1-4 or A-D selects
- * an option, Enter goes next, S skips) -- both the number keys and the
- * letter keys are listed for Answer, since the handler accepts either.
+ * an option, Left Arrow goes back, Enter goes next, S skips, G toggles the
+ * guide) -- both the number keys and the letter keys are listed for
+ * Answer, since the handler accepts either.
  */
 function Kbd({ children }: { children: string }) {
   return (
@@ -21,8 +22,10 @@ function Kbd({ children }: { children: string }) {
 
 const SHORTCUTS: Array<{ keys: string[]; action: string }> = [
   { keys: ["1–4", "A–D"], action: "Answer" },
+  { keys: ["←"], action: "Previous" },
   { keys: ["Enter"], action: "Next" },
   { keys: ["S"], action: "Skip" },
+  { keys: ["G"], action: "Guide" },
 ];
 
 export function QuizFooterBar() {

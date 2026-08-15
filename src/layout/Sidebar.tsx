@@ -1,4 +1,4 @@
-import { useState, type ReactNode } from "react";
+import { useImperativeHandle, useState, type ReactNode, type Ref } from "react";
 import { Grip, Info } from "lucide-react";
 import { cn } from "../lib/cn";
 
@@ -36,8 +36,22 @@ import { cn } from "../lib/cn";
  *
  * `visible` force-opens the drawer without any trigger -- QuizPage keeps
  * it open for the first question only. The Guide trigger (strip + grip +
- * button) is always rendered, including while `visible` is set.
+ * button) is always rendered, including while `visible` is set; the first
+ * click on the Guide button dismisses the force-opened drawer, after which
+ * the normal open/hover/pin behavior applies.
  */
+/**
+ * SidebarHandle -- imperative control for the auto-hide drawer, exposed via
+ * `ref` so the page can drive it without reaching into the drawer's
+ * internals (QuizPage's "G" shortcut toggles it this way).
+ */
+export interface SidebarHandle {
+  /** Toggle the drawer open/closed. Mirrors the Guide trigger's click:
+   * the first press while the page force-opens it (`visible`, Q1)
+   * dismisses it; after that it pins/unpins. */
+  toggle: () => void;
+}
+
 export interface SidebarProps {
   children: ReactNode;
   /** Auto-hide mode: hidden by default, opens when the Guide trigger is
@@ -48,13 +62,51 @@ export interface SidebarProps {
   /** Force the sidebar open regardless of the trigger. Only meaningful
    * with `autoHide` (QuizPage shows it on the first question only). */
   visible?: boolean;
+  /** Imperative handle for external control (QuizPage's "G" shortcut). */
+  ref?: Ref<SidebarHandle>;
 }
 
-export function Sidebar({ children, autoHide = false, visible = false }: SidebarProps) {
+export function Sidebar({
+  children,
+  autoHide = false,
+  visible = false,
+  ref,
+}: SidebarProps) {
   const [open, setOpen] = useState(false);
   // True while the cursor is over the Guide button or the open drawer; the
   // drawer stays open until the cursor leaves both (unless click-pinned).
   const [hovering, setHovering] = useState(false);
+  // True once the user has explicitly closed the force-opened drawer
+  // (`visible`) with the Guide button. `visible` stops forcing the drawer
+  // open after that first click, so the user isn't stuck with it; the
+  // dismissal lasts for the session (re-visiting question 1 won't pop it
+  // open again over their explicit choice).
+  const [dismissed, setDismissed] = useState(false);
+  // Detects when the page stops force-opening the drawer (`visible` flips
+  // off, QuizPage moving past question 1), so any pin set while it was
+  // force-open is reset -- every other question starts with the drawer
+  // closed. Adjusted during render (the React docs' "adjust state when a
+  // prop changes" pattern) rather than in an effect, per
+  // react-hooks/set-state-in-effect.
+  const [prevVisible, setPrevVisible] = useState(visible);
+
+  if (visible !== prevVisible) {
+    setPrevVisible(visible);
+    if (!visible && open) setOpen(false);
+  }
+
+  // Shared by the Guide trigger's click and the imperative `toggle` handle
+  // (QuizPage's "G" shortcut): the first press while the page force-opens
+  // the drawer (`visible`, Q1) dismisses it -- closes it and hands control
+  // back to the normal open/pin state; subsequent presses pin/unpin.
+  function toggleGuide() {
+    if (visible && !dismissed) setDismissed(true);
+    else setOpen((o) => !o);
+  }
+
+  // Expose the toggle for external callers. Recreated every render so the
+  // handle always captures fresh `visible`/`dismissed` state.
+  useImperativeHandle(ref, () => ({ toggle: toggleGuide }));
 
   // Default pinned mode -- unchanged from before.
   if (!autoHide) {
@@ -65,7 +117,7 @@ export function Sidebar({ children, autoHide = false, visible = false }: Sidebar
     );
   }
 
-  const isOpen = visible || open || hovering;
+  const isOpen = (visible && !dismissed) || open || hovering;
 
   return (
     <>
@@ -90,7 +142,7 @@ export function Sidebar({ children, autoHide = false, visible = false }: Sidebar
           />
           <button
             type="button"
-            onClick={() => setOpen((o) => !o)}
+            onClick={toggleGuide}
             onMouseEnter={() => setHovering(true)}
             onMouseLeave={() => setHovering(false)}
             aria-expanded={isOpen}

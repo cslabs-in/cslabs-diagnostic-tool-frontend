@@ -2,6 +2,7 @@ import { useEffect, useRef, useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { CheckCircle2, LogOut } from "lucide-react";
 import { DiagnosticLayout } from "../layout/DiagnosticLayout";
+import type { SidebarHandle } from "../layout/Sidebar";
 import { Progress } from "../components/ui/Progress";
 import { QuestionCard } from "../components/diagnostic/QuestionCard";
 import { NavControls } from "../components/diagnostic/NavControls";
@@ -29,14 +30,19 @@ export function QuizPage() {
   const [showCompletion, setShowCompletion] = useState(false); // end-of-quiz overlay
   const [showExitConfirm, setShowExitConfirm] = useState(false); // leave-diagnostic dialog
   const completionTimer = useRef<number | null>(null);
+  // Imperative handle into the sidebar drawer, so the "G" shortcut can
+  // toggle it from here (the drawer's open/pin state lives inside Sidebar).
+  const guideSidebarRef = useRef<SidebarHandle>(null);
 
   // Keep the latest handlers/state readable from the (once-registered)
   // keydown listener without re-registering it every render. Null when
   // there's no active question, so the listener is a no-op in that case.
   const keyActions = useRef<{
     select: (letter: OptionLetter) => void;
+    back: () => void;
     next: () => void;
     skip: () => void;
+    toggleGuide: () => void;
     locked: boolean;
   } | null>(null);
 
@@ -44,8 +50,10 @@ export function QuizPage() {
     keyActions.current = question
       ? {
           select: handleSelect,
+          back: handleBack,
           next: goToNext,
           skip: handleSkip,
+          toggleGuide: () => guideSidebarRef.current?.toggle(),
           locked: showCompletion || showExitConfirm,
         }
       : null;
@@ -81,12 +89,18 @@ export function QuizPage() {
       } else if (/^[a-dA-D]$/.test(key)) {
         e.preventDefault();
         actions.select(key.toUpperCase() as OptionLetter);
+      } else if (key === "ArrowLeft") {
+        e.preventDefault();
+        actions.back();
       } else if (key === "Enter") {
         e.preventDefault();
         actions.next();
       } else if (key.toLowerCase() === "s") {
         e.preventDefault();
         actions.skip();
+      } else if (key.toLowerCase() === "g") {
+        e.preventDefault();
+        actions.toggleGuide();
       }
     }
 
@@ -162,6 +176,7 @@ export function QuizPage() {
       sidebar={<DiagnosticGuideSidebar />}
       sidebarAutoHide
       sidebarVisible={currentIndex === 0}
+      sidebarRef={guideSidebarRef}
       onExit={handleExit}
       themeName={theme ? getThemeDisplayName(theme) : undefined}
       questionCount={questions.length}
