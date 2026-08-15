@@ -21,9 +21,22 @@ export function QuizPage() {
 
   const question = questions[currentIndex];
   const total = questions.length;
-  const answeredCount = Object.values(answers).filter(
-    (a) => a.selectedOption !== null,
-  ).length;
+  // Horizontal bar -- progress through the question list: answered and
+  // skipped questions both count (the student has dealt with them); a
+  // skipped question still stores an answer entry with selectedOption null.
+  const attemptedCount = Object.values(answers).length; // answered + skipped
+  // Concept Coverage ring -- a concept counts as covered once at least one
+  // of its questions has an answer (skips don't count, matching the bar's
+  // answered-only basis). Distinct concepts only, so multiple questions on
+  // the same concept don't inflate it.
+  const totalConcepts = new Set(questions.map((q) => q.conceptId)).size;
+  const coveredConcepts = new Set(
+    questions
+      // Loose != (not !==): excludes both unanswered lookups (undefined)
+      // and skipped questions (null) -- only real answers count.
+      .filter((q) => answers[q.questionId]?.selectedOption != null)
+      .map((q) => q.conceptId),
+  ).size;
   const selected = question ? answers[question.questionId]?.selectedOption ?? null : null;
 
   // --- Engagement state ---
@@ -193,10 +206,12 @@ export function QuizPage() {
       <div className="flex min-h-full">
         <div className="mx-auto my-auto w-full max-w-2xl space-y-6 lg:max-w-3xl xl:max-w-4xl 2xl:max-w-5xl">
         <Progress
-          value={answeredCount}
+          value={attemptedCount}
           max={total}
-          label={`Question ${currentIndex + 1} of ${total}`}
+          label={`Attempted ${attemptedCount} of ${total}`}
           ringLabel="Concept Coverage"
+          ringValue={coveredConcepts}
+          ringMax={totalConcepts}
         />
 
         <QuestionCard

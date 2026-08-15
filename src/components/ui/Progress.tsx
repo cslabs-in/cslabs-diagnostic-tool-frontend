@@ -28,6 +28,11 @@ export interface ProgressProps {
   label?: string;
   /** Label under the circular ring. Defaults to "Overall Progress". */
   ringLabel?: string;
+  /** Optional independent ring count (QuizPage: concepts covered). When
+   * omitted, the ring mirrors the linear bar's value/max. */
+  ringValue?: number;
+  /** Total for `ringValue`. Only read when `ringValue` is provided. */
+  ringMax?: number;
 }
 
 export function Progress({
@@ -36,8 +41,16 @@ export function Progress({
   className,
   label,
   ringLabel = "Overall Progress",
+  ringValue,
+  ringMax,
 }: ProgressProps) {
   const percent = max > 0 ? Math.min(100, Math.max(0, (value / max) * 100)) : 0;
+  const ringPercent =
+    ringValue !== undefined && ringMax !== undefined
+      ? ringMax > 0
+        ? Math.min(100, Math.max(0, (ringValue / ringMax) * 100))
+        : 0
+      : percent;
 
   return (
     <div className={cn("flex items-center gap-8", className)}>
@@ -56,7 +69,7 @@ export function Progress({
         />
       </div>
 
-      <CircularProgress percent={percent} label={ringLabel} />
+      <CircularProgress percent={ringPercent} label={ringLabel} />
     </div>
   );
 }
