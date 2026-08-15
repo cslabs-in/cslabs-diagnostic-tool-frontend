@@ -243,7 +243,7 @@ export function QuizPage() {
             />
             <p className="text-lg font-bold text-ink">You're done!</p>
             <p className="text-sm text-ink-soft">
-              You covered {conceptCount} concepts. Taking you to your summary…
+              You covered {coveredConcepts} concepts. Taking you to your summary…
             </p>
           </div>
         </div>
