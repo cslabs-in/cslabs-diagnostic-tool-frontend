@@ -42,7 +42,7 @@ export function NavControls({
         <button
           type="button"
           onClick={onSkip}
-          className="inline-flex items-center gap-2 rounded-btn border border-skip-line bg-skip-bg px-4 py-2 text-sm font-medium text-skip transition-shadow duration-150 hover:border-skip hover:bg-skip-line hover:text-[#5d3d1e] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-skip focus-visible:ring-offset-2"
+          className="inline-flex items-center gap-2 rounded-btn border border-skip-line bg-skip-bg px-4 py-2 text-sm font-medium text-skip transition-shadow duration-150 hover:border-skip hover:bg-skip-line hover:text-[#5d3d1e] dark:hover:text-[#ecd9b8] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-skip focus-visible:ring-offset-2"
         >
           <Info className="h-4 w-4" aria-hidden="true" />
           Skip question

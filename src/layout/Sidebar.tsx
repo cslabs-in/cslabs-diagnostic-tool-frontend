@@ -108,10 +108,13 @@ export function Sidebar({
   // handle always captures fresh `visible`/`dismissed` state.
   useImperativeHandle(ref, () => ({ toggle: toggleGuide }));
 
-  // Default pinned mode -- unchanged from before.
+  // Default pinned mode -- unchanged from before. In dark mode the panel
+  // gets a lighter neutral surface (same family as the Guide strip) so it
+  // stays visible against the page background -- `page-bg` alone and the
+  // soft shadow are both near-invisible on dark.
   if (!autoHide) {
     return (
-      <aside className="hidden min-[821px]:block w-80 shrink-0 overflow-y-auto bg-page-bg p-6">
+      <aside className="hidden min-[821px]:block w-80 shrink-0 overflow-y-auto bg-page-bg p-6 dark:bg-untested-bg">
         {children}
       </aside>
     );
@@ -174,7 +177,10 @@ export function Sidebar({
         onMouseEnter={() => setHovering(true)}
         onMouseLeave={() => setHovering(false)}
         className={cn(
-          "hidden min-[821px]:block absolute inset-y-0 left-14 z-50 w-80 overflow-y-auto bg-page-bg p-6 shadow-hover",
+          // `page-bg` + the soft shadow separate the drawer in light mode;
+          // both are near-invisible on dark, so the drawer surface lifts to
+          // the lighter neutral panel token there (same as the strip).
+          "hidden min-[821px]:block absolute inset-y-0 left-14 z-50 w-80 overflow-y-auto bg-page-bg p-6 shadow-hover dark:bg-untested-bg",
           "transition-transform duration-200 ease-out motion-reduce:transition-none",
           isOpen ? "translate-x-0" : "-translate-x-full",
         )}

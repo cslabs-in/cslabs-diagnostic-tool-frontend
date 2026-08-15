@@ -16,15 +16,28 @@ import type { ConceptScoreDTO } from "../../types/report";
  * ConceptScoreChart -- per §12: one aggregate chart alongside the prose
  * ReportBlock, both sourced from the same GET /report response (no new
  * endpoint). Colored by engine state, using the SAME three-way
- * Mastered/Needs Attention/Untested mapping as stateStyles.ts -- these hex
- * values must stay in sync with the `mastered`/`attention`/`untested`
- * colors defined in index.css's @theme block if those ever change.
+ * Mastered/Needs Attention/Untested mapping as stateStyles.ts. Colors are
+ * referenced via the semantic CSS variables (with the light values as
+ * fallbacks) so the chart follows the active theme automatically, staying
+ * in sync with the `mastered`/`attention`/`untested` tokens in index.css.
  */
 const STATE_HEX: Record<EngineConceptState, string> = {
-  Strong: "#3f6f5e",
-  Weak: "#b5482f",
-  Untested: "#6b7280",
+  Strong: "var(--color-mastered, #3f6f5e)",
+  Weak: "var(--color-attention, #b5482f)",
+  Untested: "var(--color-untested, #6b7280)",
 };
+
+// Recharts renders these as SVG attributes / inline styles, which resolve
+// CSS variables in modern browsers; the light values are fallbacks.
+const AXIS_TICK_FILL = "var(--color-ink-soft, #5c6570)";
+const GRID_STROKE = "var(--color-border, #e3e6e9)";
+const TOOLTIP_STYLE = {
+  background: "var(--color-card-bg, #ffffff)",
+  border: "1px solid var(--color-border, #e3e6e9)",
+  borderRadius: 8,
+  fontSize: 12,
+  color: "var(--color-ink, #1c2024)",
+} as const;
 
 export interface ConceptScoreChartProps {
   scores: ConceptScoreDTO[];
@@ -43,19 +56,21 @@ export function ConceptScoreChart({ scores }: ConceptScoreChartProps) {
       <div className="h-72 w-full">
         <ResponsiveContainer>
           <BarChart data={data} margin={{ top: 8, right: 8, left: 0, bottom: 40 }}>
-            <CartesianGrid strokeDasharray="3 3" stroke="#e3e6e9" vertical={false} />
+            <CartesianGrid strokeDasharray="3 3" stroke={GRID_STROKE} vertical={false} />
             <XAxis
               dataKey="name"
-              tick={{ fontSize: 11, fill: "#5c6570" }}
+              tick={{ fontSize: 11, fill: AXIS_TICK_FILL }}
               angle={-35}
               textAnchor="end"
               interval={0}
             />
             <YAxis
-              tick={{ fontSize: 11, fill: "#5c6570" }}
+              tick={{ fontSize: 11, fill: AXIS_TICK_FILL }}
               domain={[Math.min(0, ...data.map((d) => d.score)), 100]}
             />
             <Tooltip
+              contentStyle={TOOLTIP_STYLE}
+              itemStyle={{ color: "var(--color-ink, #1c2024)" }}
               formatter={(value, _name, item) => [
                 `${Number(value ?? 0)}%`,
                 STATE_STYLES[item.payload.state as EngineConceptState].label,

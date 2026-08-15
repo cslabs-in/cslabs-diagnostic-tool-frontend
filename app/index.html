@@ -5,6 +5,24 @@
     <link rel="icon" type="image/svg+xml" href="/favicon.svg" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>CSLabs Diagnostic</title>
+    <script>
+      // Apply the saved theme preference before first paint so the app
+      // never flashes light-on-dark. "system" (or no saved value) follows
+      // the OS preference. The ThemeProvider re-affirms this on mount and
+      // owns all later changes (Start-page toggle).
+      (function () {
+        try {
+          var stored = localStorage.getItem("cslabs_theme");
+          var dark =
+            stored === "dark" ||
+            (stored !== "light" &&
+              window.matchMedia("(prefers-color-scheme: dark)").matches);
+          document.documentElement.classList.toggle("dark", dark);
+        } catch (e) {
+          /* localStorage unavailable (private mode etc.) -- default light */
+        }
+      })();
+    </script>
   </head>
   <body>
     <div id="root"></div>

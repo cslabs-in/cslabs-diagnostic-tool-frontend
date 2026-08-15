@@ -45,8 +45,10 @@ export function OptionList({ options, selected, onSelect }: OptionListProps) {
             <span
               className={cn(
                 "flex h-6 w-6 shrink-0 items-center justify-center rounded-full border text-xs font-semibold",
+                // `mastered` is lighter in dark mode, so the selected circle
+                // switches to dark text (see index.css dark palette note).
                 isSelected
-                  ? "border-mastered bg-mastered text-white"
+                  ? "border-mastered bg-mastered text-white dark:text-[#0d1f18]"
                   : "border-border text-ink-soft",
               )}
             >

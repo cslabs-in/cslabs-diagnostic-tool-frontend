@@ -1,11 +1,64 @@
 import { useState } from "react";
 import { useNavigate } from "react-router-dom";
 import toast from "react-hot-toast";
+import { Monitor, Moon, Sun, type LucideIcon } from "lucide-react";
 import { DiagnosticLayout } from "../layout/DiagnosticLayout";
 import { Button } from "../components/ui/Button";
 import { ThemeSelector } from "../components/diagnostic/ThemeSelector";
 import type { ThemeId } from "../api/themes";
 import { useSession } from "../app/SessionContext";
+import { useTheme, type ThemePreference } from "../app/ThemeContext";
+import { cn } from "../lib/cn";
+
+/**
+ * ThemeToggle -- the one place the user can switch themes (per the dark-
+ * theme decision: Start page only, to avoid cluttering the quiz flow). A
+ * three-way segmented control -- Light / Dark / System -- persisted to
+ * localStorage; all other pages follow via the `.dark` class on <html>.
+ * "System" (the default) follows the OS preference live.
+ */
+const THEME_OPTIONS: Array<{
+  value: ThemePreference;
+  label: string;
+  icon: LucideIcon;
+}> = [
+  { value: "light", label: "Light", icon: Sun },
+  { value: "dark", label: "Dark", icon: Moon },
+  { value: "system", label: "System", icon: Monitor },
+];
+
+function ThemeToggle() {
+  const { preference, setPreference } = useTheme();
+  return (
+    <div
+      role="radiogroup"
+      aria-label="Theme"
+      className="flex items-center gap-1 rounded-btn border border-border bg-untested-bg p-1"
+    >
+      {THEME_OPTIONS.map(({ value, label, icon: Icon }) => {
+        const active = preference === value;
+        return (
+          <button
+            key={value}
+            type="button"
+            role="radio"
+            aria-checked={active}
+            onClick={() => setPreference(value)}
+            className={cn(
+              "inline-flex items-center gap-1.5 rounded-btn px-2.5 py-1 text-xs font-semibold transition-colors duration-150 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-mastered focus-visible:ring-offset-1",
+              active
+                ? "bg-card-bg text-mastered shadow-card ring-1 ring-border"
+                : "text-ink-soft hover:text-ink",
+            )}
+          >
+            <Icon className="h-3.5 w-3.5" aria-hidden="true" />
+            {label}
+          </button>
+        );
+      })}
+    </div>
+  );
+}
 
 /**
  * StartPage -- per §7.2:
@@ -60,7 +113,7 @@ export function StartPage() {
   }
 
   return (
-    <DiagnosticLayout>
+    <DiagnosticLayout rightSlot={<ThemeToggle />}>
       <div className="mx-auto max-w-2xl space-y-8">
         <div className="text-center">
           <h1 className="text-xl font-semibold text-ink">

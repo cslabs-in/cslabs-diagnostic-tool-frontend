@@ -22,7 +22,11 @@ const base =
   "disabled:opacity-50 disabled:cursor-not-allowed disabled:pointer-events-none";
 
 const variantClasses: Record<ButtonVariant, string> = {
-  primary: "bg-mastered text-white shadow-card hover:shadow-hover",
+  // In dark mode `mastered` is a lighter teal (reads as accent text on dark
+  // surfaces), so the solid primary fill switches to dark text to keep
+  // contrast -- see index.css's dark palette note.
+  primary:
+    "bg-mastered text-white shadow-card hover:shadow-hover dark:text-[#0d1f18]",
   secondary:
     "bg-transparent text-mastered border border-mastered-line hover:bg-mastered-bg",
   ghost: "bg-transparent text-ink-soft hover:bg-untested-bg",

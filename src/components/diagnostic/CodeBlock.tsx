@@ -1,6 +1,8 @@
 import { PrismLight as SyntaxHighlighter } from "react-syntax-highlighter";
 import c from "react-syntax-highlighter/dist/esm/languages/prism/c";
 import oneLight from "react-syntax-highlighter/dist/esm/styles/prism/one-light";
+import oneDark from "react-syntax-highlighter/dist/esm/styles/prism/one-dark";
+import { useTheme } from "../../app/ThemeContext";
 
 SyntaxHighlighter.registerLanguage("c", c);
 
@@ -21,17 +23,21 @@ export interface CodeBlockProps {
 }
 
 export function CodeBlock({ code }: CodeBlockProps) {
+  const { theme } = useTheme();
+  const isDark = theme === "dark";
   return (
     <div className="overflow-x-auto rounded-sm border border-border">
       <SyntaxHighlighter
         language="c"
-        style={oneLight}
+        style={isDark ? oneDark : oneLight}
         showLineNumbers
         customStyle={{
           margin: 0,
           padding: "1rem",
           fontSize: "0.875rem",
-          background: "#fafafa",
+          // Slightly darker than the card so the block reads as an inset
+          // surface in both themes.
+          background: isDark ? "#16191d" : "#fafafa",
         }}
       >
         {code}

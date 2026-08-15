@@ -1,5 +1,13 @@
 @import "tailwindcss";
 
+/* Dark theme is class-based: the ThemeProvider (and a pre-paint script in
+   app/index.html) toggles `.dark` on <html>, following the OS preference
+   unless the user picked an explicit override on the Start page. The
+   `dark:` variant enables per-utility overrides; the semantic tokens
+   below are redefined under `.dark` so every token-based utility (and
+   CSS-var reference like ConceptScoreChart) adapts automatically. */
+@custom-variant dark (&:where(.dark, .dark *));
+
 @theme {
   /* Colors — named for the display-layer terminology in §7.1 */
   --color-ink: #1c2024;
@@ -37,6 +45,49 @@
   /* Shadows */
   --shadow-card: 0 1px 2px rgba(0,0,0,.05);
   --shadow-hover: 0 6px 16px rgba(0,0,0,.08);
+}
+
+/* Native controls (scrollbars, form fields) follow the active theme. */
+:root {
+  color-scheme: light;
+}
+
+/* --- Dark palette ---
+   Same semantic tokens, remapped for dark surfaces. Unlayered author CSS,
+   so it wins over the @theme-declared values in Tailwind's theme layer.
+   The accent (`mastered`) is deliberately a lighter teal in dark mode so
+   it reads as accent text on dark surfaces; the two solid accent fills
+   that carry white text (primary Button, OptionList's selected letter)
+   switch to dark text via `dark:` utilities at their call sites. */
+.dark {
+  color-scheme: dark;
+
+  --color-ink: #e8ebee;
+  --color-ink-soft: #a5adb6;
+  --color-ink-faint: #6f7882;
+
+  --color-mastered: #5da689;
+  --color-mastered-bg: #17251f;
+  --color-mastered-line: #2d4a3e;
+
+  --color-attention: #e0856d;
+  --color-attention-bg: #2b1b16;
+  --color-attention-line: #4d2f26;
+
+  --color-skip: #d3a26e;
+  --color-skip-bg: #2c2318;
+  --color-skip-line: #4d3d26;
+
+  --color-untested: #a0a8b1;
+  --color-untested-bg: #23272d;
+  --color-untested-line: #383f47;
+
+  --color-partial: #ddb25a;
+  --color-partial-bg: #332a17;
+
+  --color-border: #2b3036;
+  --color-page-bg: #131517;
+  --color-card-bg: #1b1e22;
 }
 
 /* --- QuizPage engagement micro-animations ---
