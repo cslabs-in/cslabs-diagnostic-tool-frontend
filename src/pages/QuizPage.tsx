@@ -167,7 +167,16 @@ export function QuizPage() {
       questionCount={questions.length}
       footer={<QuizFooterBar />}
     >
-      <div className="mx-auto max-w-2xl space-y-6">
+      {/* The quiz block is the central object of the page: centered both
+          horizontally and vertically in the main area, and the content
+          column scales up with the viewport so wide screens (e.g. 1899px)
+          don't leave the question card floating in unused space. `my-auto`
+          inside a min-h-full flex wrapper centers it when there's room and
+          degrades to normal top-aligned scroll when the content is taller
+          than the viewport. Width steps stay on Tailwind's stock max-w
+          scale (§7.1's no-arbitrary-values rule). */}
+      <div className="flex min-h-full">
+        <div className="mx-auto my-auto w-full max-w-2xl space-y-6 lg:max-w-3xl xl:max-w-4xl 2xl:max-w-5xl">
         <Progress
           value={answeredCount}
           max={total}
@@ -189,6 +198,7 @@ export function QuizPage() {
           canGoBack={currentIndex > 0}
           isLast={currentIndex === total - 1}
         />
+        </div>
       </div>
 
       {showCompletion && (

@@ -28,8 +28,11 @@ export function QuestionCard({
   selected,
   onSelect,
 }: QuestionCardProps) {
+  // Roomier inner padding on very wide screens (2xl+) so the card reads
+  // as a substantial central object rather than a narrow strip. Stays on
+  // the §7.1 spacing scale (p-10 = 40px).
   return (
-    <Card className="space-y-5">
+    <Card className="space-y-5 2xl:p-10">
       <Badge variant="concept">{question.conceptName}</Badge>
 
       <p className="text-base font-bold text-ink">
