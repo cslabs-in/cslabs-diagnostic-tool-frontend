@@ -1,7 +1,7 @@
 import { useState } from "react";
 import { useNavigate } from "react-router-dom";
 import toast from "react-hot-toast";
-import { ArrowLeft, CheckCircle2 } from "lucide-react";
+import { ArrowLeft, CheckCircle2, Info } from "lucide-react";
 import { DiagnosticLayout } from "../layout/DiagnosticLayout";
 import { Button } from "../components/ui/Button";
 import { ReviewQuestionTable } from "../components/diagnostic/ReviewQuestionTable";
@@ -148,6 +148,17 @@ export function ReviewPage() {
           answers={answers}
           onEdit={handleEdit}
         />
+
+        {/* Note below the table per the design reference: info icon +
+            reassurance that answers can still be edited, in a subtle
+            boxed callout (light neutral surface, like the sidebar's
+            Remember card but muted). */}
+        <div className="flex items-start gap-2.5 rounded-sm border border-untested-line bg-untested-bg p-3.5">
+          <Info className="mt-0.5 h-4 w-4 shrink-0 text-ink-soft" aria-hidden="true" />
+          <p className="text-sm text-ink-soft">
+            You can go back to any question to review or change your answer.
+          </p>
+        </div>
 
         <div className="flex items-center justify-between">
           {/* One-off outline control styled inline per the ReviewPage design
