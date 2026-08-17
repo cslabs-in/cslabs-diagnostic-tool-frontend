@@ -1,5 +1,6 @@
 import { useNavigate } from "react-router-dom";
 import toast from "react-hot-toast";
+import { ArrowLeft, CheckCircle2 } from "lucide-react";
 import { DiagnosticLayout } from "../layout/DiagnosticLayout";
 import { Button } from "../components/ui/Button";
 import { AnsweredSummaryList } from "../components/diagnostic/AnsweredSummaryList";
@@ -64,11 +65,23 @@ export function ReviewPage() {
         />
 
         <div className="flex items-center justify-between">
-          <Button variant="ghost" onClick={() => navigate("/quiz")}>
+          {/* One-off outline control styled inline per the ReviewPage design
+              reference (white fill + dark green border + leading arrow icon);
+              Button's §7.1 variants stay at exactly three. */}
+          <button
+            type="button"
+            onClick={() => navigate("/quiz")}
+            className="inline-flex items-center gap-2 rounded-btn border border-mastered bg-card-bg px-4 py-2 text-sm font-medium text-mastered transition-shadow duration-150 hover:bg-mastered-bg focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-mastered focus-visible:ring-offset-2"
+          >
+            <ArrowLeft className="h-4 w-4" aria-hidden="true" />
             Back to quiz
-          </Button>
+          </button>
+
+          {/* Primary action per the design: solid dark green with the
+              checkmark-in-circle icon trailing the label. */}
           <Button variant="primary" onClick={handleSubmit}>
             Submit diagnostic
+            <CheckCircle2 className="h-4 w-4" aria-hidden="true" />
           </Button>
         </div>
       </div>
