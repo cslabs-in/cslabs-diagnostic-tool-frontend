@@ -37,6 +37,13 @@
   --color-page-bg: #f7f8f8;
   --color-card-bg: #ffffff;
 
+  /* Donut chart segment colors -- deliberately more vivid than the
+     semantic UI tokens (mastered/skip/untested) so the chart pops
+     visually against the muted card surface. */
+  --color-donut-covered: #10b981;
+  --color-donut-skipped: #f59e0b;
+  --color-donut-uncovered: #94a3b8;
+
   /* Border radius */
   --radius-sm: 8px;
   --radius-card: 12px;
@@ -88,6 +95,11 @@
   --color-border: #2b3036;
   --color-page-bg: #131517;
   --color-card-bg: #1b1e22;
+
+  /* Donut segments -- brighter on dark backgrounds so they stay vivid. */
+  --color-donut-covered: #34d399;
+  --color-donut-skipped: #fbbf24;
+  --color-donut-uncovered: #cbd5e1;
 }
 
 /* --- QuizPage engagement micro-animations ---
@@ -136,6 +148,17 @@
 }
 .animate-overlay-in {
   animation: overlay-in 200ms ease-out;
+}
+
+/* Hide scrollbar while keeping scroll functional -- used on <main> so the
+   content area stays clutter-free; keyboard/trackpad/mouse-wheel scrolling
+   still works as normal. */
+.no-scrollbar {
+  scrollbar-width: none;            /* Firefox */
+  -ms-overflow-style: none;         /* IE / Edge */
+}
+.no-scrollbar::-webkit-scrollbar {
+  display: none;                    /* Chrome / Safari / Opera */
 }
 
 @media (prefers-reduced-motion: reduce) {

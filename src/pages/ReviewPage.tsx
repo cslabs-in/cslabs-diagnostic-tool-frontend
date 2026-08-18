@@ -6,6 +6,7 @@ import { DiagnosticLayout } from "../layout/DiagnosticLayout";
 import { Button } from "../components/ui/Button";
 import { ReviewQuestionTable } from "../components/diagnostic/ReviewQuestionTable";
 import { ReviewSummaryCards } from "../components/diagnostic/ReviewSummaryCards";
+import { ReviewRightSidebar } from "../components/diagnostic/ReviewRightSidebar";
 import { ReviewSummarySidebar } from "../components/diagnostic/ReviewSummarySidebar";
 import { ReviewTabs, type TabType } from "../components/diagnostic/ReviewTabs";
 import { SortSelect, type SortKey } from "../components/diagnostic/SortSelect";
@@ -121,6 +122,13 @@ export function ReviewPage() {
           total={total}
           answeredCount={answeredCount}
           skippedCount={skippedCount}
+        />
+      }
+      rightSidebar={
+        <ReviewRightSidebar
+          answeredCount={answeredCount}
+          skippedCount={skippedCount}
+          unansweredCount={unansweredCount}
         />
       }
       onExit={handleExit}
