@@ -7,7 +7,7 @@ import { Button } from "../components/ui/Button";
 import { ReviewQuestionTable } from "../components/diagnostic/ReviewQuestionTable";
 import { ReviewSummaryCards } from "../components/diagnostic/ReviewSummaryCards";
 import { ReviewRightSidebar } from "../components/diagnostic/ReviewRightSidebar";
-import { ReviewSummarySidebar } from "../components/diagnostic/ReviewSummarySidebar";
+import { ReviewGuideSidebar } from "../components/diagnostic/ReviewGuideSidebar";
 import { ReviewTabs, type TabType } from "../components/diagnostic/ReviewTabs";
 import { SortSelect, type SortKey } from "../components/diagnostic/SortSelect";
 import { useSession } from "../app/SessionContext";
@@ -152,13 +152,7 @@ export function ReviewPage() {
 
   return (
     <DiagnosticLayout
-      sidebar={
-        <ReviewSummarySidebar
-          total={total}
-          answeredCount={answeredCount}
-          skippedCount={skippedCount}
-        />
-      }
+      sidebar={<ReviewGuideSidebar />}
       rightSidebar={
         <ReviewRightSidebar
           coveredConceptCount={coveredConceptCount}
