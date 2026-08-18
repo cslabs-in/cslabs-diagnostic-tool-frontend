@@ -167,6 +167,8 @@ export function ReviewPage() {
           answeredCount={answeredCount}
           skippedCount={skippedCount}
           unansweredCount={unansweredCount}
+          questions={questions}
+          onJumpToQuestion={handleEdit}
         />
       }
       onExit={handleExit}
