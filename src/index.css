@@ -96,8 +96,8 @@
   --color-page-bg: #131517;
   --color-card-bg: #1b1e22;
 
-  /* Donut segments -- brighter on dark backgrounds so they stay vivid. */
-  --color-donut-covered: #34d399;
+  /* Donut segments -- vibrant on dark backgrounds so they stay vivid. */
+  --color-donut-covered: #4ade80;
   --color-donut-skipped: #fbbf24;
   --color-donut-uncovered: #cbd5e1;
 }
