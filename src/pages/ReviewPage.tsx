@@ -5,6 +5,7 @@ import { ArrowLeft, CheckCircle2, Info } from "lucide-react";
 import { DiagnosticLayout } from "../layout/DiagnosticLayout";
 import { Button } from "../components/ui/Button";
 import { ReviewQuestionTable } from "../components/diagnostic/ReviewQuestionTable";
+import { ReviewSummaryCards } from "../components/diagnostic/ReviewSummaryCards";
 import { ReviewSummarySidebar } from "../components/diagnostic/ReviewSummarySidebar";
 import { ReviewTabs, type TabType } from "../components/diagnostic/ReviewTabs";
 import { SortSelect, type SortKey } from "../components/diagnostic/SortSelect";
@@ -133,6 +134,16 @@ export function ReviewPage() {
             Tap any question to go back and change your answer.
           </p>
         </div>
+
+        {/* Individual summary cards per the v2 design reference -- total /
+            answered / skipped / unanswered counts only (no Concept Coverage
+            ring). Placed above the filter tabs, below the heading. */}
+        <ReviewSummaryCards
+          total={total}
+          answeredCount={answeredCount}
+          skippedCount={skippedCount}
+          unansweredCount={unansweredCount}
+        />
 
         <div className="flex flex-wrap items-center justify-between gap-3">
           <ReviewTabs

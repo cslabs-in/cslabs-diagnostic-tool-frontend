@@ -4,6 +4,7 @@ import {
   ChevronDown,
   ChevronLeft,
   ChevronRight,
+  Circle,
   Forward,
 } from "lucide-react";
 import { Badge } from "../ui/Badge";
@@ -28,9 +29,10 @@ import type { Answer, Question } from "../../types/diagnostic";
  * the first visible row across the resize.
  *
  * Status visuals follow the design reference: Answered = green check pill,
- * Skipped = amber forward (skip) icon pill, Unanswered = gray dot + plain
- * text. NO correctness (right/wrong) anywhere -- the engine doesn't
- * expose per-question correctness, only concept-level state.
+ * Skipped = amber forward (skip) icon pill, Unanswered = gray Circle icon +
+ * plain text (the same icon as the ReviewSummaryCards stat, so the two
+ * stay consistent). NO correctness (right/wrong) anywhere -- the engine
+ * doesn't expose per-question correctness, only concept-level state.
  */
 export interface ReviewQuestionTableProps {
   /** Question plus its index in the FULL question list -- filtered tabs
@@ -269,7 +271,8 @@ export function ReviewQuestionTable({
 }
 
 /** Status cell per the design reference: colored pills for Answered and
- * Skipped, a plain gray dot + label for Unanswered. */
+ * Skipped, a gray Circle icon + label for Unanswered (matching the
+ * ReviewSummaryCards stat). */
 function StatusCell({ status }: { status: RowStatus }) {
   if (status === "answered") {
     return (
@@ -291,7 +294,7 @@ function StatusCell({ status }: { status: RowStatus }) {
   }
   return (
     <span className="inline-flex items-center gap-1.5 text-xs font-medium text-ink-soft">
-      <span className="h-2 w-2 rounded-full bg-untested" aria-hidden="true" />
+      <Circle className="h-3.5 w-3.5 text-untested" aria-hidden="true" />
       Unanswered
     </span>
   );
