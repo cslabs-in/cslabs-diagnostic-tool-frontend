@@ -37,6 +37,41 @@ export function ReviewPage() {
   ).length;
   const unansweredCount = total - answeredCount - skippedCount;
 
+  // ── Concept-level coverage ────────────────────────────────────────
+  // Group questions by conceptId and classify each concept exactly once.
+  // Logic mirrors QuizPage's coveredConcepts: a concept counts as
+  // covered when at least one of its questions has a real answer
+  // (selectedOption != null). Skips alone don't cover a concept.
+  const conceptMap = new Map<
+    string,
+    { answered: boolean; allVisited: boolean }
+  >();
+  for (const q of questions) {
+    const entry = conceptMap.get(q.conceptId);
+    if (entry) {
+      if (!entry.answered && answers[q.questionId]?.selectedOption != null) {
+        entry.answered = true;
+      }
+      if (entry.allVisited && !(q.questionId in answers)) {
+        entry.allVisited = false;
+      }
+    } else {
+      const ans = answers[q.questionId];
+      conceptMap.set(q.conceptId, {
+        answered: ans?.selectedOption != null,
+        allVisited: q.questionId in answers,
+      });
+    }
+  }
+  const conceptEntries = [...conceptMap.values()];
+  const coveredConceptCount = conceptEntries.filter((c) => c.answered).length;
+  const skippedConceptCount = conceptEntries.filter(
+    (c) => !c.answered && c.allVisited,
+  ).length;
+  const uncoveredConceptCount = conceptEntries.filter(
+    (c) => !c.answered && !c.allVisited,
+  ).length;
+
   const counts = {
     all: total,
     answered: answeredCount,
@@ -126,6 +161,9 @@ export function ReviewPage() {
       }
       rightSidebar={
         <ReviewRightSidebar
+          coveredConceptCount={coveredConceptCount}
+          skippedConceptCount={skippedConceptCount}
+          uncoveredConceptCount={uncoveredConceptCount}
           answeredCount={answeredCount}
           skippedCount={skippedCount}
           unansweredCount={unansweredCount}
