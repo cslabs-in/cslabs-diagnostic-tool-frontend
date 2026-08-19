@@ -61,19 +61,25 @@ export interface SidebarProps {
   autoHide?: boolean;
   /** Render the pinned variant only at the xl desktop breakpoint. */
   wideOnly?: boolean;
+  /** Hide the native scrollbar while preserving normal scroll behavior. */
+  hideScrollbar?: boolean;
   /** Force the sidebar open regardless of the trigger. Only meaningful
    * with `autoHide` (QuizPage shows it on the first question only). */
   visible?: boolean;
   /** Imperative handle for external control (QuizPage's "G" shortcut). */
   ref?: Ref<SidebarHandle>;
+  /** Override the default w-80 sidebar width with responsive classes. */
+  widthClassName?: string;
 }
 
 export function Sidebar({
   children,
   autoHide = false,
   wideOnly = false,
+  hideScrollbar = false,
   visible = false,
   ref,
+  widthClassName,
 }: SidebarProps) {
   const [open, setOpen] = useState(false);
   // True while the cursor is over the Guide button or the open drawer; the
@@ -118,8 +124,10 @@ export function Sidebar({
   if (!autoHide) {
     return (
       <aside className={cn(
-        "w-80 shrink-0 overflow-y-auto bg-page-bg p-6 dark:bg-untested-bg",
+        widthClassName ?? "w-80",
+        "shrink-0 overflow-y-auto bg-page-bg p-6 dark:bg-untested-bg",
         wideOnly ? "hidden xl:block" : "hidden min-[821px]:block",
+        hideScrollbar && "no-scrollbar",
       )}>
         {children}
       </aside>

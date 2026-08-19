@@ -240,6 +240,8 @@ export function ReviewPage() {
         />
       }
       sidebarWideOnly
+      sidebarHideScrollbar
+      sidebarWidthClassName="w-80 xl:w-[26rem] 2xl:w-[28rem]"
       onExit={handleExit}
       themeName={theme ? getThemeDisplayName(theme) : undefined}
       questionCount={questions.length}

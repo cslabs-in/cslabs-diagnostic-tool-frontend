@@ -30,6 +30,11 @@ export interface DiagnosticLayoutProps
   /** Show the pinned sidebar only on wide desktop layouts. ReviewPage uses
    * this so the question grid stays primary on tablet widths. */
   sidebarWideOnly?: boolean;
+  /** Hide the pinned sidebar's native scrollbar while keeping it scrollable.
+   * ReviewPage uses this for its compact desktop overview. */
+  sidebarHideScrollbar?: boolean;
+  /** Override the default w-80 sidebar width with responsive classes. */
+  sidebarWidthClassName?: string;
   /** Optional right sidebar, rendered as a supporting column on wide
    * screens. ReviewPage keeps its primary work area readable on tablets, so
    * this panel intentionally appears only from the xl layout upward. */
@@ -51,6 +56,8 @@ export interface DiagnosticLayoutProps
 export function DiagnosticLayout({
   sidebar,
   sidebarWideOnly = false,
+  sidebarHideScrollbar = false,
+  sidebarWidthClassName,
   rightSidebar,
   sidebarAutoHide = false,
   sidebarVisible = false,
@@ -78,8 +85,10 @@ export function DiagnosticLayout({
           <Sidebar
             ref={sidebarRef}
             wideOnly={sidebarWideOnly}
+            hideScrollbar={sidebarHideScrollbar}
             autoHide={sidebarAutoHide}
             visible={sidebarVisible}
+            widthClassName={sidebarWidthClassName}
           >
             {sidebar}
           </Sidebar>

@@ -1,5 +1,6 @@
 import { useState } from "react";
 import { cn } from "../../lib/cn";
+import { Card } from "../ui/Card";
 import { getFocusConcepts, type ConceptResponse } from "./conceptResponse";
 
 export interface ReviewOverviewSidebarProps {
@@ -29,7 +30,7 @@ export function ReviewOverviewSidebar({
   const conceptsToRevisit = focusConcepts.length;
 
   return (
-    <div className="space-y-5">
+    <Card className="space-y-5">
       <section className="rounded-card border border-skip-line bg-skip-bg/35 p-4 text-sm">
         <p className="font-semibold text-ink">Review overview</p>
         <p className="mt-1.5 leading-5 text-ink-soft">
@@ -39,7 +40,7 @@ export function ReviewOverviewSidebar({
         </p>
       </section>
 
-      <section className="rounded-card border border-border bg-card-bg p-4 shadow-card">
+      <section className="rounded-card border border-border bg-card-bg p-4">
         <div className="flex items-start justify-between gap-3">
           <div>
             <h2 className="text-sm font-semibold text-ink">Filter by concept</h2>
@@ -62,8 +63,12 @@ export function ReviewOverviewSidebar({
               >
                 <div className="flex items-center gap-2">
                   <span className="min-w-0 flex-1 truncate text-xs font-medium text-ink">{concept.conceptName}</span>
-                  <span className="shrink-0 text-[11px] text-ink-soft">{concept.answeredCount}/{concept.totalCount}</span>                  
+                  <span className="shrink-0 text-[11px] text-ink-soft">{concept.answeredCount}/{concept.totalCount}</span>
                 </div>
+                <AnsweredProgressRail
+                  answeredCount={concept.answeredCount}
+                  totalCount={concept.totalCount}
+                />
               </button>
             </li>
           ))}
@@ -78,6 +83,40 @@ export function ReviewOverviewSidebar({
           </button>
         )}
       </section>
-    </div>
+    </Card>
+  );
+}
+
+function AnsweredProgressRail({
+  answeredCount,
+  totalCount,
+}: {
+  answeredCount: number;
+  totalCount: number;
+}) {
+  const percent = totalCount > 0 ? (answeredCount / totalCount) * 100 : 0;
+  return (
+    <span
+      role="progressbar"
+      aria-label={`${answeredCount} of ${totalCount} questions answered`}
+      aria-valuemin={0}
+      aria-valuemax={totalCount}
+      aria-valuenow={answeredCount}
+      className="relative mt-1.5 block h-2"
+    >
+      <span className="absolute inset-x-0 top-1/2 h-0.5 -translate-y-1/2 rounded-full bg-untested-line" aria-hidden="true" />
+      <span
+        className="absolute left-0 top-1/2 h-0.5 -translate-y-1/2 rounded-full bg-mastered transition-all duration-150 motion-reduce:transition-none"
+        style={{ width: `${percent}%` }}
+        aria-hidden="true"
+      />
+      {answeredCount > 0 && (
+        <span
+          className="absolute top-1/2 h-2 w-2 -translate-x-1/2 -translate-y-1/2 rounded-full bg-mastered transition-all duration-150 motion-reduce:transition-none"
+          style={{ left: `${percent}%` }}
+          aria-hidden="true"
+        />
+      )}
+    </span>
   );
 }
