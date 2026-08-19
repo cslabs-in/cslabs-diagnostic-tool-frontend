@@ -1,12 +1,13 @@
 import { cn } from "../../lib/cn";
 
-export type TabType = "all" | "answered" | "skipped" | "unanswered";
+export type TabType = "all" | "to-revisit" | "answered" | "skipped" | "unanswered";
 
 export interface ReviewTabsProps {
   activeTab: TabType;
   onTabChange: (tab: TabType) => void;
   counts: {
     all: number;
+    "to-revisit": number;
     answered: number;
     skipped: number;
     unanswered: number;
@@ -15,6 +16,7 @@ export interface ReviewTabsProps {
 
 const tabs: { id: TabType; label: string }[] = [
   { id: "all", label: "All" },
+  { id: "to-revisit", label: "To revisit" },
   { id: "answered", label: "Answered" },
   { id: "skipped", label: "Skipped" },
   { id: "unanswered", label: "Unanswered" },

@@ -1,12 +1,12 @@
 import { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
 import toast from "react-hot-toast";
-import { ArrowLeft, CheckCircle2, CircleAlert, Info } from "lucide-react";
+import { ArrowLeft, CheckCircle2, CircleAlert, Info, X } from "lucide-react";
 import { DiagnosticLayout } from "../layout/DiagnosticLayout";
 import { Button } from "../components/ui/Button";
 import { ReviewQuestionTable } from "../components/diagnostic/ReviewQuestionTable";
-import { ReviewSummaryCards } from "../components/diagnostic/ReviewSummaryCards";
-import { ReviewRightSidebar } from "../components/diagnostic/ReviewRightSidebar";
+import { ReviewOverviewSidebar } from "../components/diagnostic/ReviewOverviewSidebar";
+import type { ConceptResponse } from "../components/diagnostic/conceptResponse";
 import { ReviewTabs, type TabType } from "../components/diagnostic/ReviewTabs";
 import { SortSelect, type SortKey } from "../components/diagnostic/SortSelect";
 import { useSession } from "../app/SessionContext";
@@ -20,11 +20,20 @@ const STATUS_ORDER: Record<RowStatus, number> = {
   unanswered: 2,
 };
 
+const FILTER_LABELS: Record<TabType, string> = {
+  all: "All",
+  "to-revisit": "To revisit",
+  answered: "Answered",
+  skipped: "Skipped",
+  unanswered: "Unanswered",
+};
+
 export function ReviewPage() {
   const navigate = useNavigate();
   const { theme, questions, answers, goToIndex, completeAndFetchReport } = useSession();
 
   const [activeTab, setActiveTab] = useState<TabType>("all");
+  const [selectedConceptId, setSelectedConceptId] = useState<string>();
   const [sortKey, setSortKey] = useState<SortKey>("question");
   const [showSubmitCheck, setShowSubmitCheck] = useState(false);
 
@@ -63,26 +72,43 @@ export function ReviewPage() {
       });
     }
   }
-  const conceptEntries = [...conceptMap.values()];
-  const coveredConceptCount = conceptEntries.filter((c) => c.answered).length;
-  const skippedConceptCount = conceptEntries.filter(
-    (c) => !c.answered && c.allVisited,
-  ).length;
-  const uncoveredConceptCount = conceptEntries.filter(
-    (c) => !c.answered && !c.allVisited,
-  ).length;
 
+  // The response summary is intentionally separate from coverage. Coverage
+  // classifies a concept once; this keeps the full response mix for each
+  // concept so the student can find questions to revisit without seeing any
+  // correctness signal.
+  const conceptResponseMap = new Map<string, ConceptResponse>();
+  questions.forEach((question, order) => {
+    const entry = conceptResponseMap.get(question.conceptId) ?? {
+      conceptId: question.conceptId,
+      conceptName: question.conceptName,
+      answeredCount: 0,
+      skippedCount: 0,
+      unansweredCount: 0,
+      totalCount: 0,
+      order,
+    };
+    entry.totalCount += 1;
+    const status = getRowStatus(answers, question.questionId);
+    if (status === "answered") entry.answeredCount += 1;
+    else if (status === "skipped") entry.skippedCount += 1;
+    else entry.unansweredCount += 1;
+    conceptResponseMap.set(question.conceptId, entry);
+  });
+  const conceptResponses = [...conceptResponseMap.values()];
   const counts = {
     all: total,
+    "to-revisit": skippedCount + unansweredCount,
     answered: answeredCount,
     skipped: skippedCount,
     unanswered: unansweredCount,
   };
   const remainingCount = skippedCount + unansweredCount;
-  const remainingLabel = [
-    skippedCount > 0 && `${skippedCount} skipped`,
-    unansweredCount > 0 && `${unansweredCount} unanswered`,
-  ].filter(Boolean).join(" and ");
+  const remainingLabel = `${remainingCount} questions to revisit`;
+  // [
+  //   skippedCount > 0 && `${skippedCount} skipped`,
+  //   unansweredCount > 0 && `${unansweredCount} unanswered`,
+  // ].filter(Boolean).join(" and ");
 
   useEffect(() => {
     function onKeyDown(event: KeyboardEvent) {
@@ -99,15 +125,21 @@ export function ReviewPage() {
   const filteredRows = questions
     .map((question, index) => ({ question, index }))
     .filter(({ question }) => {
+      if (selectedConceptId && question.conceptId !== selectedConceptId) {
+        return false;
+      }
+      const status = getRowStatus(answers, question.questionId);
       switch (activeTab) {
         case "all":
           return true;
+        case "to-revisit":
+          return status !== "answered";
         case "answered":
-          return getRowStatus(answers, question.questionId) === "answered";
+          return status === "answered";
         case "skipped":
-          return getRowStatus(answers, question.questionId) === "skipped";
+          return status === "skipped";
         case "unanswered":
-          return getRowStatus(answers, question.questionId) === "unanswered";
+          return status === "unanswered";
       }
     });
 
@@ -167,9 +199,30 @@ export function ReviewPage() {
   }
 
   function handleReviewRemaining() {
-    setActiveTab(unansweredCount > 0 ? "unanswered" : "skipped");
+    setActiveTab("to-revisit");
+    setSelectedConceptId(undefined);
     setShowSubmitCheck(false);
   }
+
+  function handleStatusFilter(tab: TabType) {
+    setActiveTab(tab);
+  }
+
+  function handleSelectConcept(conceptId: string) {
+    setSelectedConceptId(conceptId);
+  }
+
+  function removeStatusFilter() {
+    setActiveTab("all");
+  }
+
+  function removeConceptFilter() {
+    setSelectedConceptId(undefined);
+  }
+
+  const selectedConcept = conceptResponses.find(
+    (concept) => concept.conceptId === selectedConceptId,
+  );
 
   function handleExit() {
     const confirmed = window.confirm("Exit the diagnostic? Your progress is saved.");
@@ -178,16 +231,15 @@ export function ReviewPage() {
 
   return (
     <DiagnosticLayout
-      rightSidebar={
-        <ReviewRightSidebar
-          coveredConceptCount={coveredConceptCount}
-          skippedConceptCount={skippedConceptCount}
-          uncoveredConceptCount={uncoveredConceptCount}
-          answeredCount={answeredCount}
-          skippedCount={skippedCount}
-          unansweredCount={unansweredCount}
+      sidebar={
+        <ReviewOverviewSidebar
+          concepts={conceptResponses}
+          remainingCount={remainingCount}
+          selectedConceptId={selectedConceptId}
+          onSelectConcept={handleSelectConcept}
         />
       }
+      sidebarWideOnly
       onExit={handleExit}
       themeName={theme ? getThemeDisplayName(theme) : undefined}
       questionCount={questions.length}
@@ -209,14 +261,12 @@ export function ReviewPage() {
           </p>
         </div>
 
-        <ReviewSummaryCards
+        {/* <ReviewSummaryCards
           total={total}
           answeredCount={answeredCount}
           skippedCount={skippedCount}
           unansweredCount={unansweredCount}
-          activeTab={activeTab}
-          onSelect={setActiveTab}
-        />
+        /> */}
 
         <div className="flex items-start gap-3 rounded-card border border-mastered-line bg-mastered-bg p-4">
           <Info className="mt-0.5 h-5 w-5 shrink-0 text-mastered" aria-hidden="true" />
@@ -233,11 +283,41 @@ export function ReviewPage() {
         <div className="flex flex-col gap-3 sm:flex-row sm:flex-wrap sm:items-center sm:justify-between">
           <ReviewTabs
             activeTab={activeTab}
-            onTabChange={setActiveTab}
+            onTabChange={handleStatusFilter}
             counts={counts}
           />
           <SortSelect value={sortKey} onChange={setSortKey} />
         </div>
+
+        {(activeTab !== "all" || selectedConcept) && (
+          <div className="flex flex-wrap items-center gap-2 rounded-btn border border-mastered-line bg-mastered-bg px-3 py-2 text-sm">
+            <span className="font-medium text-ink">
+              Showing {filteredRows.length} question{filteredRows.length === 1 ? "" : "s"}
+            </span>
+            {activeTab !== "all" && (
+              <button
+                type="button"
+                onClick={removeStatusFilter}
+                aria-label={`Remove ${FILTER_LABELS[activeTab]} filter`}
+                className="inline-flex min-h-10 items-center gap-1 rounded-full border border-mastered-line bg-card-bg px-3 text-sm font-medium text-mastered transition-colors hover:bg-mastered-bg focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-mastered focus-visible:ring-offset-2"
+              >
+                {FILTER_LABELS[activeTab]}
+                <X className="h-3.5 w-3.5" aria-hidden="true" />
+              </button>
+            )}
+            {selectedConcept && (
+              <button
+                type="button"
+                onClick={removeConceptFilter}
+                aria-label={`Remove ${selectedConcept.conceptName} filter`}
+                className="inline-flex min-h-10 items-center gap-1 rounded-full border border-mastered-line bg-card-bg px-3 text-sm font-medium text-mastered transition-colors hover:bg-mastered-bg focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-mastered focus-visible:ring-offset-2"
+              >
+                {selectedConcept.conceptName}
+                <X className="h-3.5 w-3.5" aria-hidden="true" />
+              </button>
+            )}
+          </div>
+        )}
 
         <ReviewQuestionTable
           rows={sortedRows}

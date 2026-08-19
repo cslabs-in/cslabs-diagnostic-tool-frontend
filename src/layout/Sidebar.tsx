@@ -59,6 +59,8 @@ export interface SidebarProps {
    * or clicked to pin (click again to unpin). Overlays Main while
    * closed. */
   autoHide?: boolean;
+  /** Render the pinned variant only at the xl desktop breakpoint. */
+  wideOnly?: boolean;
   /** Force the sidebar open regardless of the trigger. Only meaningful
    * with `autoHide` (QuizPage shows it on the first question only). */
   visible?: boolean;
@@ -69,6 +71,7 @@ export interface SidebarProps {
 export function Sidebar({
   children,
   autoHide = false,
+  wideOnly = false,
   visible = false,
   ref,
 }: SidebarProps) {
@@ -114,7 +117,10 @@ export function Sidebar({
   // soft shadow are both near-invisible on dark.
   if (!autoHide) {
     return (
-      <aside className="hidden min-[821px]:block w-80 shrink-0 overflow-y-auto bg-page-bg p-6 dark:bg-untested-bg">
+      <aside className={cn(
+        "w-80 shrink-0 overflow-y-auto bg-page-bg p-6 dark:bg-untested-bg",
+        wideOnly ? "hidden xl:block" : "hidden min-[821px]:block",
+      )}>
         {children}
       </aside>
     );

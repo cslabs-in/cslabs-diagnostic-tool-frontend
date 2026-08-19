@@ -27,6 +27,9 @@ import { Footer } from "./Footer";
 export interface DiagnosticLayoutProps
   extends Pick<HeaderProps, "themeName" | "questionCount" | "onExit" | "exitLabel" | "rightSlot"> {
   sidebar?: ReactNode;
+  /** Show the pinned sidebar only on wide desktop layouts. ReviewPage uses
+   * this so the question grid stays primary on tablet widths. */
+  sidebarWideOnly?: boolean;
   /** Optional right sidebar, rendered as a supporting column on wide
    * screens. ReviewPage keeps its primary work area readable on tablets, so
    * this panel intentionally appears only from the xl layout upward. */
@@ -47,6 +50,7 @@ export interface DiagnosticLayoutProps
 
 export function DiagnosticLayout({
   sidebar,
+  sidebarWideOnly = false,
   rightSidebar,
   sidebarAutoHide = false,
   sidebarVisible = false,
@@ -73,6 +77,7 @@ export function DiagnosticLayout({
         {sidebar && (
           <Sidebar
             ref={sidebarRef}
+            wideOnly={sidebarWideOnly}
             autoHide={sidebarAutoHide}
             visible={sidebarVisible}
           >
