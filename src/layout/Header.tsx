@@ -37,19 +37,19 @@ export function Header({
   rightSlot,
 }: HeaderProps) {
   return (
-    <header className="flex shrink-0 items-center border-b border-border bg-card-bg px-6 py-4">
+    <header className="flex shrink-0 flex-wrap items-center gap-x-3 gap-y-2 border-b border-border bg-card-bg px-4 py-3 sm:px-6 sm:py-4">
       <div className="flex items-center gap-3">
-        <Brain className="h-10 w-10 shrink-0 text-mastered" aria-hidden="true" />
+        <Brain className="h-8 w-8 shrink-0 text-mastered sm:h-10 sm:w-10" aria-hidden="true" />
         <div className="leading-tight">
-          <p className="text-base font-semibold text-ink">
+          <p className="text-sm font-semibold text-ink sm:text-base">
             CSLabs | Veridex <span className="font-medium">Diagnostic</span>
           </p>
-          <p className="text-xs text-ink-soft">Know yourself. Plan better.</p>
+          <p className="hidden text-xs text-ink-soft min-[420px]:block">Know yourself. Plan better.</p>
         </div>
       </div>
 
       {themeName && (
-        <div className="ml-10 border-l border-border pl-8 leading-tight">
+        <div className="order-3 basis-full border-t border-border pt-2 leading-tight sm:order-none sm:ml-6 sm:basis-auto sm:border-l sm:border-t-0 sm:pl-6 sm:pt-0">
           <p className="text-xs text-ink-faint">Current Theme</p>
           <p className="text-sm font-semibold text-ink">{themeName}</p>
           <p className="text-xs text-ink-faint">{questionCount} questions</p>
@@ -64,10 +64,11 @@ export function Header({
           <button
             type="button"
             onClick={onExit}
-            className="inline-flex items-center gap-2 rounded-btn px-4 py-1.5 text-sm font-semibold text-mastered transition-colors duration-150 hover:bg-mastered-bg focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-mastered focus-visible:ring-offset-2"
+            aria-label={exitLabel}
+            className="inline-flex min-h-11 items-center gap-2 rounded-btn px-3 py-1.5 text-sm font-semibold text-mastered transition-colors duration-150 hover:bg-mastered-bg focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-mastered focus-visible:ring-offset-2 sm:px-4"
           >
             <LogOut className="h-3.5 w-3.5" strokeWidth={2.5} aria-hidden="true" />
-            {exitLabel}
+            <span className="hidden sm:inline">{exitLabel}</span>
           </button>
         ))}
       </div>

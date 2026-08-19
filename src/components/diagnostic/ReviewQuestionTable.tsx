@@ -14,10 +14,9 @@ import type { RowStatus } from "../../lib/reviewStatus";
 import type { Answer, Question } from "../../types/diagnostic";
 
 /**
- * ReviewQuestionTable -- the tabular layout on ReviewPage (design reference:
- * Question | Concept | Your response | Status | Action). Replaces the old
- * whole-row-click list: rows themselves are inert; only the Action button
- * (chevron) routes back into the quiz at that question's index (§7.4).
+ * ReviewQuestionTable -- a dense table from md upward and calm answer cards
+ * on phones. Only the clearly labelled Review control routes back into the
+ * quiz, so the affordance never contradicts the page copy.
  *
  * Paginates when the row count exceeds `pageSize` (default 20 -- the
  * current 12-question themes stay on a single page, matching the design
@@ -115,6 +114,7 @@ export function ReviewQuestionTable({
 
   return (
     <div className="overflow-hidden rounded-card border border-border bg-card-bg">
+      <div className="hidden md:block">
       <table className="w-full text-left text-sm">
         <thead>
           <tr className="border-b border-border text-xs font-semibold uppercase tracking-wide text-ink-faint">
@@ -171,10 +171,10 @@ export function ReviewQuestionTable({
                     <button
                       type="button"
                       onClick={() => onEdit(index)}
-                      aria-label={`Edit question Q${index + 1}`}
-                      title={`Go to question Q${index + 1}`}
-                      className={iconButtonClasses}
+                      aria-label={`Review question Q${index + 1}`}
+                      className="inline-flex min-h-9 items-center gap-1.5 rounded-btn border border-border px-2.5 text-xs font-semibold text-mastered transition-colors duration-150 hover:border-mastered-line hover:bg-mastered-bg focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-mastered focus-visible:ring-offset-2"
                     >
+                      Review
                       <ChevronRight className="h-4 w-4" aria-hidden="true" />
                     </button>
                   </td>
@@ -184,9 +184,48 @@ export function ReviewQuestionTable({
           )}
         </tbody>
       </table>
+      </div>
+
+      <div className="divide-y divide-border md:hidden">
+        {rows.length === 0 ? (
+          <p className="px-4 py-10 text-center text-sm text-ink-soft">
+            No questions in this view.
+          </p>
+        ) : (
+          visibleRows.map(({ question, index }) => {
+            const status = getRowStatus(answers, question.questionId);
+            const response = status === "answered"
+              ? answers[question.questionId]!.selectedOption
+              : "No response selected";
+            return (
+              <article key={question.questionId} className="space-y-3 p-4">
+                <div className="flex items-start justify-between gap-3">
+                  <div>
+                    <p className="text-sm font-semibold text-ink">Question {index + 1}</p>
+                    <div className="mt-2"><Badge variant="concept">{question.conceptName}</Badge></div>
+                  </div>
+                  <StatusCell status={status} />
+                </div>
+                <div className="flex items-center justify-between rounded-btn bg-page-bg px-3 py-2 text-sm">
+                  <span className="text-ink-soft">Your response</span>
+                  <span className="font-semibold text-ink">{response}</span>
+                </div>
+                <button
+                  type="button"
+                  onClick={() => onEdit(index)}
+                  className="inline-flex min-h-11 w-full items-center justify-center gap-2 rounded-btn border border-mastered-line px-4 text-sm font-semibold text-mastered transition-colors duration-150 hover:bg-mastered-bg focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-mastered focus-visible:ring-offset-2"
+                >
+                  Review answer
+                  <ChevronRight className="h-4 w-4" aria-hidden="true" />
+                </button>
+              </article>
+            );
+          })
+        )}
+      </div>
 
       {showPagination && rows.length > 0 && (
-        <div className="flex flex-wrap items-center justify-between gap-3 border-t border-border px-4 py-3">
+        <div className="flex flex-col gap-3 border-t border-border px-4 py-3 sm:flex-row sm:flex-wrap sm:items-center sm:justify-between">
           <div className="flex flex-wrap items-center gap-4">
             <p className="text-xs text-ink-soft">
               Showing {start + 1}–{Math.min(start + pageSizeState, rows.length)} of{" "}

@@ -22,14 +22,14 @@ const tabs: { id: TabType; label: string }[] = [
 
 export function ReviewTabs({ activeTab, onTabChange, counts }: ReviewTabsProps) {
   return (
-    <div className="flex items-center gap-2">
+    <div className="no-scrollbar -mx-1 flex max-w-full items-center gap-2 overflow-x-auto px-1">
       {tabs.map((tab) => (
         <button
           key={tab.id}
           type="button"
           onClick={() => onTabChange(tab.id)}
           className={cn(
-            "inline-flex items-center gap-1.5 rounded-full border px-3 py-1.5 text-sm font-medium transition-colors",
+            "inline-flex min-h-11 shrink-0 items-center gap-1.5 rounded-full border px-3 py-1.5 text-sm font-medium transition-colors",
             activeTab === tab.id
               ? "border-mastered bg-mastered-bg text-mastered"
               : "border-border bg-card-bg text-ink-soft hover:border-mastered-line hover:bg-mastered-bg/50"

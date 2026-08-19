@@ -18,6 +18,7 @@ import { cn } from "../../lib/cn";
  */
 
 interface SummaryCard {
+  id: "all" | "answered" | "skipped" | "unanswered";
   label: string;
   value: number;
   icon: LucideIcon;
@@ -30,6 +31,8 @@ export interface ReviewSummaryCardsProps {
   answeredCount: number;
   skippedCount: number;
   unansweredCount: number;
+  activeTab: SummaryCard["id"];
+  onSelect: (tab: SummaryCard["id"]) => void;
 }
 
 const TONE_CLASSES: Record<SummaryCard["tone"], string> = {
@@ -43,12 +46,14 @@ export function ReviewSummaryCards({
   answeredCount,
   skippedCount,
   unansweredCount,
+  activeTab,
+  onSelect,
 }: ReviewSummaryCardsProps) {
   const cards: SummaryCard[] = [
-    { label: "Total questions", value: total, icon: FileText, tone: "mastered" },
-    { label: "Answered", value: answeredCount, icon: CheckCircle2, tone: "mastered" },
-    { label: "Skipped", value: skippedCount, icon: Forward, tone: "skip" },
-    { label: "Unanswered", value: unansweredCount, icon: Circle, tone: "untested" },
+    { id: "all", label: "Total questions", value: total, icon: FileText, tone: "mastered" },
+    { id: "answered", label: "Answered", value: answeredCount, icon: CheckCircle2, tone: "mastered" },
+    { id: "skipped", label: "Skipped", value: skippedCount, icon: Forward, tone: "skip" },
+    { id: "unanswered", label: "Unanswered", value: unansweredCount, icon: Circle, tone: "untested" },
   ];
 
   return (
@@ -56,9 +61,16 @@ export function ReviewSummaryCards({
       {cards.map((card) => {
         const Icon = card.icon;
         return (
-          <div
+          <button
             key={card.label}
-            className="rounded-card border border-border bg-card-bg p-4 shadow-card"
+            type="button"
+            onClick={() => onSelect(card.id)}
+            aria-pressed={activeTab === card.id}
+            className={cn(
+              "min-h-28 rounded-card border bg-card-bg p-4 text-left shadow-card transition-colors duration-150",
+              "hover:border-mastered-line hover:bg-mastered-bg/40 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-mastered focus-visible:ring-offset-2",
+              activeTab === card.id ? "border-mastered" : "border-border",
+            )}
           >
             <span
               className={cn(
@@ -70,7 +82,7 @@ export function ReviewSummaryCards({
             </span>
             <p className="mt-2 text-2xl font-bold text-ink">{card.value}</p>
             <p className="text-xs font-medium text-ink-soft">{card.label}</p>
-          </div>
+          </button>
         );
       })}
     </div>

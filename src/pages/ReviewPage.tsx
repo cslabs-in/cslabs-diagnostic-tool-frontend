@@ -1,13 +1,12 @@
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
 import toast from "react-hot-toast";
-import { ArrowLeft, CheckCircle2, Info } from "lucide-react";
+import { ArrowLeft, CheckCircle2, CircleAlert, Info } from "lucide-react";
 import { DiagnosticLayout } from "../layout/DiagnosticLayout";
 import { Button } from "../components/ui/Button";
 import { ReviewQuestionTable } from "../components/diagnostic/ReviewQuestionTable";
 import { ReviewSummaryCards } from "../components/diagnostic/ReviewSummaryCards";
 import { ReviewRightSidebar } from "../components/diagnostic/ReviewRightSidebar";
-import { ReviewGuideSidebar } from "../components/diagnostic/ReviewGuideSidebar";
 import { ReviewTabs, type TabType } from "../components/diagnostic/ReviewTabs";
 import { SortSelect, type SortKey } from "../components/diagnostic/SortSelect";
 import { useSession } from "../app/SessionContext";
@@ -27,6 +26,7 @@ export function ReviewPage() {
 
   const [activeTab, setActiveTab] = useState<TabType>("all");
   const [sortKey, setSortKey] = useState<SortKey>("question");
+  const [showSubmitCheck, setShowSubmitCheck] = useState(false);
 
   const total = questions.length;
   const answeredCount = Object.values(answers).filter(
@@ -78,6 +78,19 @@ export function ReviewPage() {
     skipped: skippedCount,
     unanswered: unansweredCount,
   };
+  const remainingCount = skippedCount + unansweredCount;
+  const remainingLabel = [
+    skippedCount > 0 && `${skippedCount} skipped`,
+    unansweredCount > 0 && `${unansweredCount} unanswered`,
+  ].filter(Boolean).join(" and ");
+
+  useEffect(() => {
+    function onKeyDown(event: KeyboardEvent) {
+      if (event.key === "Escape") setShowSubmitCheck(false);
+    }
+    window.addEventListener("keydown", onKeyDown);
+    return () => window.removeEventListener("keydown", onKeyDown);
+  }, []);
 
   // Keep the real index alongside each question so filtered tabs (Answered /
   // Skipped / Unanswered) still show stable Q numbers and route row clicks
@@ -145,6 +158,19 @@ export function ReviewPage() {
     }
   }
 
+  function handleSubmitClick() {
+    if (remainingCount > 0) {
+      setShowSubmitCheck(true);
+      return;
+    }
+    void handleSubmit();
+  }
+
+  function handleReviewRemaining() {
+    setActiveTab(unansweredCount > 0 ? "unanswered" : "skipped");
+    setShowSubmitCheck(false);
+  }
+
   function handleExit() {
     const confirmed = window.confirm("Exit the diagnostic? Your progress is saved.");
     if (confirmed) navigate("/");
@@ -152,7 +178,6 @@ export function ReviewPage() {
 
   return (
     <DiagnosticLayout
-      sidebar={<ReviewGuideSidebar />}
       rightSidebar={
         <ReviewRightSidebar
           coveredConceptCount={coveredConceptCount}
@@ -161,33 +186,51 @@ export function ReviewPage() {
           answeredCount={answeredCount}
           skippedCount={skippedCount}
           unansweredCount={unansweredCount}
-          questions={questions}
-          onJumpToQuestion={handleEdit}
         />
       }
       onExit={handleExit}
       themeName={theme ? getThemeDisplayName(theme) : undefined}
       questionCount={questions.length}
+      footer={
+        <ReviewActionBar
+          remainingCount={remainingCount}
+          remainingLabel={remainingLabel}
+          onBack={() => navigate("/quiz")}
+          onSubmit={handleSubmitClick}
+        />
+      }
     >
-      <div className="mx-auto max-w-2xl space-y-6 lg:max-w-3xl xl:max-w-4xl">
+      <div className="mx-auto max-w-2xl space-y-5 pb-4 lg:max-w-3xl xl:max-w-4xl">
         <div>
-          <h1 className="text-lg font-semibold text-ink">Review your answers</h1>
+          <p className="mb-1 text-sm font-medium text-mastered">Before your diagnostic report</p>
+          <h1 className="text-xl font-semibold text-ink">Review your responses</h1>
           <p className="text-sm text-ink-soft">
-            Tap any question to go back and change your answer.
+            Take a moment to check what you selected before creating your diagnostic report.
           </p>
         </div>
 
-        {/* Individual summary cards per the v2 design reference -- total /
-            answered / skipped / unanswered counts only (no Concept Coverage
-            ring). Placed above the filter tabs, below the heading. */}
         <ReviewSummaryCards
           total={total}
           answeredCount={answeredCount}
           skippedCount={skippedCount}
           unansweredCount={unansweredCount}
+          activeTab={activeTab}
+          onSelect={setActiveTab}
         />
 
-        <div className="flex flex-wrap items-center justify-between gap-3">
+        <div className="flex items-start gap-3 rounded-card border border-mastered-line bg-mastered-bg p-4">
+          <Info className="mt-0.5 h-5 w-5 shrink-0 text-mastered" aria-hidden="true" />
+          <div className="space-y-1 text-sm">
+            <p className="font-semibold text-ink">You can submit whenever you feel ready.</p>
+            <p className="text-ink-soft">
+              {remainingCount > 0
+                ? `${remainingLabel} response${remainingCount === 1 ? " is" : "s are"} still visible below. Skipping is useful evidence of where you are unsure.`
+                : "Every question has a response or intentional skip. You can still revisit any answer."}
+            </p>
+          </div>
+        </div>
+
+        <div className="flex flex-col gap-3 sm:flex-row sm:flex-wrap sm:items-center sm:justify-between">
           <ReviewTabs
             activeTab={activeTab}
             onTabChange={setActiveTab}
@@ -201,39 +244,73 @@ export function ReviewPage() {
           answers={answers}
           onEdit={handleEdit}
         />
-
-        {/* Note below the table per the design reference: info icon +
-            reassurance that answers can still be edited, in a subtle
-            boxed callout (light neutral surface, like the sidebar's
-            Remember card but muted). */}
-        <div className="flex items-start gap-2.5 rounded-sm border border-untested-line bg-untested-bg p-3.5">
-          <Info className="mt-0.5 h-4 w-4 shrink-0 text-ink-soft" aria-hidden="true" />
-          <p className="text-sm text-ink-soft">
-            You can go back to any question to review or change your answer.
-          </p>
-        </div>
-
-        <div className="flex items-center justify-between">
-          {/* One-off outline control styled inline per the ReviewPage design
-              reference (white fill + dark green border + leading arrow icon);
-              Button's §7.1 variants stay at exactly three. */}
-          <button
-            type="button"
-            onClick={() => navigate("/quiz")}
-            className="inline-flex items-center gap-2 rounded-btn border border-mastered bg-card-bg px-4 py-2 text-sm font-medium text-mastered transition-shadow duration-150 hover:bg-mastered-bg focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-mastered focus-visible:ring-offset-2"
-          >
-            <ArrowLeft className="h-4 w-4" aria-hidden="true" />
-            Back to quiz
-          </button>
-
-          {/* Primary action per the design: solid dark green with the
-              checkmark-in-circle icon trailing the label. */}
-          <Button variant="primary" onClick={handleSubmit}>
-            Submit diagnostic
-            <CheckCircle2 className="h-4 w-4" aria-hidden="true" />
-          </Button>
-        </div>
       </div>
+
+      {showSubmitCheck && (
+        <div
+          className="fixed inset-0 z-50 flex items-center justify-center bg-ink/35 p-4 animate-overlay-in"
+          role="presentation"
+        >
+          <div
+            role="dialog"
+            aria-modal="true"
+            aria-labelledby="review-submit-title"
+            className="w-full max-w-md rounded-card border border-border bg-card-bg p-6 shadow-hover animate-question-in"
+          >
+            <CircleAlert className="h-7 w-7 text-skip" aria-hidden="true" />
+            <h2 id="review-submit-title" className="mt-3 text-lg font-semibold text-ink">
+              A quick check before submission
+            </h2>
+            <p className="mt-2 text-sm leading-6 text-ink-soft">
+              You have {remainingLabel}. Those responses help the diagnostic understand
+              your current starting point. You may submit now or review them once more.
+            </p>
+            <div className="mt-5 flex flex-col-reverse gap-3 sm:flex-row sm:justify-end">
+              <Button variant="secondary" onClick={handleReviewRemaining} className="min-h-11">
+                Review remaining
+              </Button>
+              <Button variant="primary" onClick={() => void handleSubmit()} className="min-h-11">
+                Submit diagnostic
+                <CheckCircle2 className="h-4 w-4" aria-hidden="true" />
+              </Button>
+            </div>
+          </div>
+        </div>
+      )}
     </DiagnosticLayout>
+  );
+}
+
+interface ReviewActionBarProps {
+  remainingCount: number;
+  remainingLabel: string;
+  onBack: () => void;
+  onSubmit: () => void;
+}
+
+function ReviewActionBar({
+  remainingCount,
+  remainingLabel,
+  onBack,
+  onSubmit,
+}: ReviewActionBarProps) {
+  return (
+    <div className="mx-auto flex w-full max-w-6xl flex-col gap-3 sm:flex-row sm:items-center sm:justify-between">
+      <p className="text-sm text-ink-soft">
+        {remainingCount > 0
+          ? `${remainingLabel} — you can review them now or submit when ready.`
+          : "Your progress is saved. You can submit when ready."}
+      </p>
+      <div className="flex flex-col gap-2 sm:flex-row">
+        <Button variant="secondary" onClick={onBack} className="min-h-11 sm:min-w-40">
+          <ArrowLeft className="h-4 w-4" aria-hidden="true" />
+          Back to questions
+        </Button>
+        <Button variant="primary" onClick={onSubmit} className="min-h-11 sm:min-w-44">
+          Submit diagnostic
+          <CheckCircle2 className="h-4 w-4" aria-hidden="true" />
+        </Button>
+      </div>
+    </div>
   );
 }

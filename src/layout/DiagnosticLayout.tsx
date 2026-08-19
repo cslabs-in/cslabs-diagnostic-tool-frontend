@@ -27,10 +27,9 @@ import { Footer } from "./Footer";
 export interface DiagnosticLayoutProps
   extends Pick<HeaderProps, "themeName" | "questionCount" | "onExit" | "exitLabel" | "rightSlot"> {
   sidebar?: ReactNode;
-  /** Optional right sidebar, rendered as a pinned column opposite the left
-   * sidebar (ReviewPage's response overview, question navigator, etc.).
-   * Same width and breakpoint behaviour as the left sidebar: hidden below
-   * 821px, pinned at w-80 above that, scrolls independently. */
+  /** Optional right sidebar, rendered as a supporting column on wide
+   * screens. ReviewPage keeps its primary work area readable on tablets, so
+   * this panel intentionally appears only from the xl layout upward. */
   rightSidebar?: ReactNode;
   /** Auto-hide the sidebar (QuizPage only): hidden by default, slides in
    * when the cursor touches the left edge of the screen. */
@@ -80,10 +79,10 @@ export function DiagnosticLayout({
             {sidebar}
           </Sidebar>
         )}
-        <main className="no-scrollbar flex-1 overflow-y-auto p-8">{children}</main>
+        <main className="no-scrollbar flex-1 overflow-y-auto p-4 sm:p-6 lg:p-8">{children}</main>
 
         {rightSidebar && (
-          <aside className="hidden min-[821px]:block w-80 shrink-0 overflow-y-auto bg-page-bg p-6 dark:bg-untested-bg">
+          <aside className="hidden xl:block w-80 shrink-0 overflow-y-auto bg-page-bg p-6 dark:bg-untested-bg">
             {rightSidebar}
           </aside>
         )}
