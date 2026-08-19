@@ -1,90 +1,126 @@
 import { useState } from "react";
 import { cn } from "../../lib/cn";
 import { Card } from "../ui/Card";
-import { getFocusConcepts, type ConceptResponse } from "./conceptResponse";
+import type { ConceptResponse } from "./conceptResponse";
 
 export interface ReviewOverviewSidebarProps {
   concepts: ConceptResponse[];
-  remainingCount: number;
   selectedConceptId?: string;
   onSelectConcept: (conceptId: string) => void;
 }
 
 const PAGE_SIZE = 10;
 
+interface ConceptGroup {
+  key: string;
+  label: string;
+  concepts: ConceptResponse[];
+}
+
 /** Wide-screen orientation only. The compact rows preserve the central grid
  * as the detailed review surface, while still allowing a direct concept jump. */
 export function ReviewOverviewSidebar({
   concepts,
-  remainingCount,
   selectedConceptId,
   onSelectConcept,
 }: ReviewOverviewSidebarProps) {
   const [visibleCount, setVisibleCount] = useState(PAGE_SIZE);
-  const focusConcepts = getFocusConcepts(concepts);
-  const completedConcepts = concepts
-    .filter((concept) => concept.skippedCount + concept.unansweredCount === 0)
-    .sort((a, b) => a.order - b.order);
-  const orderedConcepts = [...focusConcepts, ...completedConcepts];
+  const orderedConcepts = [...concepts].sort(compareConcepts);
   const visibleConcepts = orderedConcepts.slice(0, visibleCount);
-  const conceptsToRevisit = focusConcepts.length;
+  const visibleGroups = groupVisibleConcepts(visibleConcepts);
 
   return (
-    <Card className="space-y-5">
-      <section className="rounded-card border border-skip-line bg-skip-bg/35 p-4 text-sm">
-        <p className="font-semibold text-ink">Review overview</p>
-        <p className="mt-1.5 leading-5 text-ink-soft">
-          {remainingCount > 0
-            ? `You may want to revisit ${remainingCount} question${remainingCount === 1 ? "" : "s"} across ${conceptsToRevisit} concept${conceptsToRevisit === 1 ? "" : "s"}.`
-            : "Every question has a response or intentional skip."}
+    <Card className="p-4">
+      <div>
+        <p className="text-[10px] font-semibold uppercase tracking-[0.14em] text-mastered">
+          Concept filter
         </p>
-      </section>
-
-      <section className="rounded-card border border-border bg-card-bg p-4">
-        <div className="flex items-start justify-between gap-3">
-          <div>
-            <h2 className="text-sm font-semibold text-ink">Filter by concept</h2>
-            <p className="mt-1 text-xs text-ink-soft">Select one to filter questions.</p>
-          </div>
-      
-        </div>
-        <ul className="mt-3 divide-y divide-border border-y border-border">
-          {visibleConcepts.map((concept) => (
-            <li key={concept.conceptId}>
-              <button
-                type="button"
-                onClick={() => onSelectConcept(concept.conceptId)}
-                aria-label={`Filter questions by ${concept.conceptName}: ${concept.answeredCount} answered of ${concept.totalCount}`}
-                aria-pressed={selectedConceptId === concept.conceptId}
-                className={cn(
-                  "w-full py-2 text-left focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-mastered focus-visible:ring-inset",
-                  selectedConceptId === concept.conceptId && "bg-mastered-bg/60",
-                )}
-              >
-                <div className="flex items-center gap-2">
-                  <span className="min-w-0 flex-1 truncate text-xs font-medium text-ink">{concept.conceptName}</span>
-                  <span className="shrink-0 text-[11px] text-ink-soft">{concept.answeredCount}/{concept.totalCount}</span>
-                </div>
-                <AnsweredProgressRail
-                  answeredCount={concept.answeredCount}
-                  totalCount={concept.totalCount}
-                />
-              </button>
-            </li>
+        <h2 className="mt-1 text-sm font-semibold text-ink">Filter by concept</h2>
+        <p className="mt-1 text-xs text-ink-soft">Select one to filter questions.</p>
+      </div>
+      {visibleGroups.length === 0 ? (
+        <p className="py-8 text-center text-sm text-ink-soft">No concepts available.</p>
+      ) : (
+        <div className="mt-4 space-y-4">
+          {visibleGroups.map((group) => (
+            <section key={group.key} aria-label={group.label}>
+              <p className="text-[10px] font-semibold uppercase tracking-[0.12em] text-ink-soft">
+                {group.label} answered
+              </p>
+              <div className="mt-2 border-t border-border" />
+              <ul className="divide-y divide-border">
+                {group.concepts.map((concept) => (
+                  <li key={concept.conceptId}>
+                    <button
+                      type="button"
+                      onClick={() => onSelectConcept(concept.conceptId)}
+                      aria-label={`Filter questions by ${concept.conceptName}: ${concept.answeredCount} answered of ${concept.totalCount}`}
+                      aria-pressed={selectedConceptId === concept.conceptId}
+                      className={cn(
+                        "w-full py-2 text-left focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-mastered focus-visible:ring-inset",
+                        selectedConceptId === concept.conceptId && "bg-mastered-bg/60",
+                      )}
+                    >
+                      <div className="flex items-center gap-2">
+                        <span className="min-w-0 flex-1 truncate text-xs font-medium text-ink">{concept.conceptName}</span>
+                        <span className="shrink-0 text-[11px] text-ink-soft">{concept.answeredCount}/{concept.totalCount}</span>
+                      </div>
+                      <AnsweredProgressRail
+                        answeredCount={concept.answeredCount}
+                        totalCount={concept.totalCount}
+                      />
+                    </button>
+                  </li>
+                ))}
+              </ul>
+            </section>
           ))}
-        </ul>
-        {visibleCount < orderedConcepts.length && (
-          <button
-            type="button"
-            onClick={() => setVisibleCount((count) => Math.min(count + PAGE_SIZE, orderedConcepts.length))}
-            className="mt-3 inline-flex min-h-9 text-xs font-semibold text-mastered underline-offset-4 hover:underline focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-mastered focus-visible:ring-offset-2"
-          >
-            Show {Math.min(PAGE_SIZE, orderedConcepts.length - visibleCount)} more
-          </button>
-        )}
-      </section>
+        </div>
+      )}
+      {visibleCount < orderedConcepts.length && (
+        <button
+          type="button"
+          onClick={() => setVisibleCount((count) => Math.min(count + PAGE_SIZE, orderedConcepts.length))}
+          className="mt-4 inline-flex min-h-9 text-xs font-semibold text-mastered underline-offset-4 hover:underline focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-mastered focus-visible:ring-offset-2"
+        >
+          Show {Math.min(PAGE_SIZE, orderedConcepts.length - visibleCount)} more
+        </button>
+      )}
     </Card>
   );
+}
+
+function compareConcepts(a: ConceptResponse, b: ConceptResponse): number {
+  const aRatio = a.totalCount > 0 ? a.answeredCount / a.totalCount : 0;
+  const bRatio = b.totalCount > 0 ? b.answeredCount / b.totalCount : 0;
+  if (aRatio !== bRatio) return aRatio - bRatio;
+  if (a.answeredCount !== b.answeredCount) return a.answeredCount - b.answeredCount;
+  if (a.totalCount !== b.totalCount) return a.totalCount - b.totalCount;
+
+  const aComplete = a.answeredCount === a.totalCount;
+  const bComplete = b.answeredCount === b.totalCount;
+  if (aComplete && bComplete) return a.order - b.order;
+
+  const aPriority = a.unansweredCount > 0 ? 0 : a.skippedCount > 0 ? 1 : 2;
+  const bPriority = b.unansweredCount > 0 ? 0 : b.skippedCount > 0 ? 1 : 2;
+  return aPriority - bPriority || a.order - b.order;
+}
+
+function groupVisibleConcepts(concepts: ConceptResponse[]): ConceptGroup[] {
+  const groups = new Map<string, ConceptGroup>();
+  for (const concept of concepts) {
+    const key = `${concept.answeredCount}/${concept.totalCount}`;
+    const existing = groups.get(key);
+    if (existing) existing.concepts.push(concept);
+    else {
+      groups.set(key, {
+        key,
+        label: `${concept.answeredCount} / ${concept.totalCount}`,
+        concepts: [concept],
+      });
+    }
+  }
+  return [...groups.values()];
 }
 
 function AnsweredProgressRail({
@@ -110,13 +146,6 @@ function AnsweredProgressRail({
         style={{ width: `${percent}%` }}
         aria-hidden="true"
       />
-      {answeredCount > 0 && (
-        <span
-          className="absolute top-1/2 h-2 w-2 -translate-x-1/2 -translate-y-1/2 rounded-full bg-mastered transition-all duration-150 motion-reduce:transition-none"
-          style={{ left: `${percent}%` }}
-          aria-hidden="true"
-        />
-      )}
     </span>
   );
 }

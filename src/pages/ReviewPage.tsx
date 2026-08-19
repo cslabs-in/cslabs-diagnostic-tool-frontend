@@ -233,8 +233,8 @@ export function ReviewPage() {
     <DiagnosticLayout
       sidebar={
         <ReviewOverviewSidebar
+          key={conceptResponses.map((concept) => concept.conceptId).join("\u0001")}
           concepts={conceptResponses}
-          remainingCount={remainingCount}
           selectedConceptId={selectedConceptId}
           onSelectConcept={handleSelectConcept}
         />
