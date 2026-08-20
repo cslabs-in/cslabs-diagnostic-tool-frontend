@@ -35,6 +35,9 @@ export interface DiagnosticLayoutProps
   sidebarHideScrollbar?: boolean;
   /** Override the default w-80 sidebar width with responsive classes. */
   sidebarWidthClassName?: string;
+  /** Optional page-level context rendered below the app header and above the
+   * independently scrollable workspace. */
+  pageContext?: ReactNode;
   /** Optional right sidebar, rendered as a supporting column on wide
    * screens. ReviewPage keeps its primary work area readable on tablets, so
    * this panel intentionally appears only from the xl layout upward. */
@@ -58,6 +61,7 @@ export function DiagnosticLayout({
   sidebarWideOnly = false,
   sidebarHideScrollbar = false,
   sidebarWidthClassName,
+  pageContext,
   rightSidebar,
   sidebarAutoHide = false,
   sidebarVisible = false,
@@ -79,6 +83,8 @@ export function DiagnosticLayout({
         exitLabel={exitLabel}
         rightSlot={rightSlot}
       />
+
+      {pageContext}
 
       <div className="relative flex flex-1 overflow-hidden">
         {sidebar && (

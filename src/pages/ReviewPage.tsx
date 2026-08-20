@@ -242,45 +242,23 @@ export function ReviewPage() {
       sidebarWideOnly
       sidebarHideScrollbar
       sidebarWidthClassName="w-80 xl:w-[26rem] 2xl:w-[28rem]"
+      pageContext={
+        <ReviewContextStrip
+          remainingCount={remainingCount}
+          remainingLabel={remainingLabel}
+        />
+      }
       onExit={handleExit}
       themeName={theme ? getThemeDisplayName(theme) : undefined}
       questionCount={questions.length}
-      footer={
-        <ReviewActionBar
-          remainingCount={remainingCount}
-          remainingLabel={remainingLabel}
-          onBack={() => navigate("/quiz")}
-          onSubmit={handleSubmitClick}
-        />
-      }
     >
       <div className="mx-auto max-w-2xl space-y-5 pb-4 lg:max-w-3xl xl:max-w-4xl">
-        <div>
-          <p className="mb-1 text-sm font-medium text-mastered">Before your diagnostic report</p>
-          <h1 className="text-xl font-semibold text-ink">Review your responses</h1>
-          <p className="text-sm text-ink-soft">
-            Take a moment to check what you selected before creating your diagnostic report.
-          </p>
-        </div>
-
         {/* <ReviewSummaryCards
           total={total}
           answeredCount={answeredCount}
           skippedCount={skippedCount}
           unansweredCount={unansweredCount}
         /> */}
-
-        <div className="flex items-start gap-3 rounded-card border border-mastered-line bg-mastered-bg p-4">
-          <Info className="mt-0.5 h-5 w-5 shrink-0 text-mastered" aria-hidden="true" />
-          <div className="space-y-1 text-sm">
-            <p className="font-semibold text-ink">You can submit whenever you feel ready.</p>
-            <p className="text-ink-soft">
-              {remainingCount > 0
-                ? `${remainingLabel} response${remainingCount === 1 ? " is" : "s are"} still visible below. Skipping is useful evidence of where you are unsure.`
-                : "Every question has a response or intentional skip. You can still revisit any answer."}
-            </p>
-          </div>
-        </div>
 
         <div className="flex flex-col gap-3 sm:flex-row sm:flex-wrap sm:items-center sm:justify-between">
           <ReviewTabs
@@ -326,6 +304,11 @@ export function ReviewPage() {
           answers={answers}
           onEdit={handleEdit}
         />
+
+        <ReviewActionBar
+          onBack={() => navigate("/quiz")}
+          onSubmit={handleSubmitClick}
+        />
       </div>
 
       {showSubmitCheck && (
@@ -363,36 +346,64 @@ export function ReviewPage() {
   );
 }
 
-interface ReviewActionBarProps {
+interface ReviewContextStripProps {
   remainingCount: number;
   remainingLabel: string;
+}
+
+function ReviewContextStrip({ remainingCount}: ReviewContextStripProps) {
+  return (
+    <section className="shrink-0 border-b border-border bg-card-bg" aria-labelledby="review-page-title">
+      <div className="px-4 py-3 sm:px-6 lg:px-8 xl:grid xl:grid-cols-[26rem_minmax(0,1fr)] xl:px-0 2xl:grid-cols-[28rem_minmax(0,1fr)]">
+        <div className="xl:px-6">
+          <div className="xl:pt-1">
+            <p className="text-[10px] font-semibold uppercase tracking-[0.14em] text-mastered">
+              Before your diagnostic report
+            </p>
+            <h1 id="review-page-title" className="mt-0.5 text-lg font-semibold text-ink sm:text-xl">
+              Review your responses
+            </h1>
+          </div>
+        </div>
+        <div className="xl:px-8">
+          <div className="mx-auto mt-3 max-w-2xl xl:mt-0 lg:max-w-3xl xl:max-w-4xl">
+            <div className="flex items-start gap-3 rounded-card border border-mastered-line bg-mastered-bg p-2">
+              <Info className="mt-0.5 h-5 w-5 shrink-0 text-mastered" aria-hidden="true" />
+              <div className="space-y-1 text-sm">
+                <p className="font-semibold text-ink">You can submit whenever you feel ready.</p>
+                <p className="text-ink-soft">
+                  {remainingCount > 0
+                    ? `${remainingCount} question${remainingCount === 1 ? " is" : "s are"} still available to revisit. Skipped responses are useful where you are unsure.`
+                    : "Every question has a response or intentional skip. You can still revisit any answer."}
+                </p>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+  );
+}
+
+interface ReviewActionBarProps {
   onBack: () => void;
   onSubmit: () => void;
 }
 
 function ReviewActionBar({
-  remainingCount,
-  remainingLabel,
   onBack,
   onSubmit,
 }: ReviewActionBarProps) {
   return (
-    <div className="mx-auto flex w-full max-w-6xl flex-col gap-3 sm:flex-row sm:items-center sm:justify-between">
-      <p className="text-sm text-ink-soft">
-        {remainingCount > 0
-          ? `${remainingLabel} — you can review them now or submit when ready.`
-          : "Your progress is saved. You can submit when ready."}
-      </p>
-      <div className="flex flex-col gap-2 sm:flex-row">
-        <Button variant="secondary" onClick={onBack} className="min-h-11 sm:min-w-40">
-          <ArrowLeft className="h-4 w-4" aria-hidden="true" />
-          Back to questions
-        </Button>
-        <Button variant="primary" onClick={onSubmit} className="min-h-11 sm:min-w-44">
-          Submit diagnostic
-          <CheckCircle2 className="h-4 w-4" aria-hidden="true" />
-        </Button>
-      </div>
+    <div className="flex flex-col gap-3 pt-2 sm:flex-row sm:items-center sm:justify-between">
+      <Button variant="secondary" onClick={onBack} className="min-h-11 sm:min-w-40">
+        <ArrowLeft className="h-4 w-4" aria-hidden="true" />
+        Back to questions
+      </Button>
+      <Button variant="primary" onClick={onSubmit} className="min-h-11 sm:min-w-44">
+        Generate Diagnostic Report
+        <CheckCircle2 className="h-4 w-4" aria-hidden="true" />
+      </Button>
     </div>
   );
 }
