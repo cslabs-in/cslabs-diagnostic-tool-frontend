@@ -35,9 +35,15 @@ export interface DiagnosticLayoutProps
   sidebarHideScrollbar?: boolean;
   /** Override the default w-80 sidebar width with responsive classes. */
   sidebarWidthClassName?: string;
+  /** Optional surface classes for the pinned sidebar variant. */
+  sidebarSurfaceClassName?: string;
   /** Optional page-level context rendered below the app header and above the
    * independently scrollable workspace. */
   pageContext?: ReactNode;
+  /** Optional persistent content at the top of the main workspace column. */
+  mainHeader?: ReactNode;
+  /** Optional persistent content at the bottom of the main workspace column. */
+  mainFooter?: ReactNode;
   /** Optional right sidebar, rendered as a supporting column on wide
    * screens. ReviewPage keeps its primary work area readable on tablets, so
    * this panel intentionally appears only from the xl layout upward. */
@@ -53,6 +59,8 @@ export interface DiagnosticLayoutProps
   /** Page-specific footer content (QuizPage: auto-save reassurance +
    * keyboard-shortcuts legend), rendered above the copyright strip. */
   footer?: ReactNode;
+  /** Optional wrapper classes for page-specific footer content. */
+  footerContentClassName?: string;
   children: ReactNode;
 }
 
@@ -61,12 +69,16 @@ export function DiagnosticLayout({
   sidebarWideOnly = false,
   sidebarHideScrollbar = false,
   sidebarWidthClassName,
+  sidebarSurfaceClassName,
   pageContext,
+  mainHeader,
+  mainFooter,
   rightSidebar,
   sidebarAutoHide = false,
   sidebarVisible = false,
   sidebarRef,
   footer,
+  footerContentClassName,
   children,
   themeName,
   questionCount,
@@ -95,11 +107,18 @@ export function DiagnosticLayout({
             autoHide={sidebarAutoHide}
             visible={sidebarVisible}
             widthClassName={sidebarWidthClassName}
+            pinnedSurfaceClassName={sidebarSurfaceClassName}
           >
             {sidebar}
           </Sidebar>
         )}
-        <main className="no-scrollbar flex-1 overflow-y-auto p-4 sm:p-6 lg:p-8">{children}</main>
+        <main className="flex min-w-0 flex-1 flex-col overflow-hidden">
+          {mainHeader && <div className="shrink-0">{mainHeader}</div>}
+          <div className="no-scrollbar min-h-0 flex-1 overflow-y-auto p-4 sm:p-6 lg:p-8">
+            {children}
+          </div>
+          {mainFooter && <div className="shrink-0">{mainFooter}</div>}
+        </main>
 
         {rightSidebar && (
           <aside className="hidden xl:block w-80 shrink-0 overflow-y-auto bg-page-bg p-6 dark:bg-untested-bg">
@@ -108,7 +127,7 @@ export function DiagnosticLayout({
         )}
       </div>
 
-      <Footer>{footer}</Footer>
+      <Footer contentClassName={footerContentClassName}>{footer}</Footer>
     </div>
   );
 }

@@ -96,12 +96,26 @@ export function ReviewPage() {
     conceptResponseMap.set(question.conceptId, entry);
   });
   const conceptResponses = [...conceptResponseMap.values()];
+
+  // When a concept filter is active, scope the pill counts to that
+  // concept's questions so the tabs reflect the filtered subset.
+  const conceptQuestions = selectedConceptId
+    ? questions.filter((q) => q.conceptId === selectedConceptId)
+    : questions;
+  const countsAll = conceptQuestions.length;
+  const countsAnswered = conceptQuestions.filter(
+    (q) => answers[q.questionId]?.selectedOption != null,
+  ).length;
+  const countsSkipped = conceptQuestions.filter(
+    (q) => q.questionId in answers && answers[q.questionId]?.selectedOption === null,
+  ).length;
+  const countsUnanswered = countsAll - countsAnswered - countsSkipped;
   const counts = {
-    all: total,
-    "to-revisit": skippedCount + unansweredCount,
-    answered: answeredCount,
-    skipped: skippedCount,
-    unanswered: unansweredCount,
+    all: countsAll,
+    "to-revisit": countsSkipped + countsUnanswered,
+    answered: countsAnswered,
+    skipped: countsSkipped,
+    unanswered: countsUnanswered,
   };
   const remainingCount = skippedCount + unansweredCount;
   const remainingLabel = `${remainingCount} questions to revisit`;
@@ -242,6 +256,7 @@ export function ReviewPage() {
       sidebarWideOnly
       sidebarHideScrollbar
       sidebarWidthClassName="w-80 xl:w-[26rem] 2xl:w-[28rem]"
+      sidebarSurfaceClassName="bg-untested-bg"
       pageContext={
         <ReviewContextStrip
           remainingCount={remainingCount}
@@ -251,8 +266,53 @@ export function ReviewPage() {
       onExit={handleExit}
       themeName={theme ? getThemeDisplayName(theme) : undefined}
       questionCount={questions.length}
+      mainHeader={
+        <section className="border-b border-border bg-page-bg px-4 py-3 sm:px-6 lg:px-8" aria-label="Question filters">
+          <div className="mx-auto max-w-2xl space-y-3 lg:max-w-3xl xl:max-w-4xl">
+            <div className="flex flex-col gap-3 sm:flex-row sm:flex-wrap sm:items-center sm:justify-between">
+              <ReviewTabs
+                activeTab={activeTab}
+                onTabChange={handleStatusFilter}
+                counts={counts}
+              />
+              <SortSelect value={sortKey} onChange={setSortKey} />
+            </div>
+
+            {(activeTab !== "all" || selectedConcept) && (
+              <div className="flex flex-wrap items-center gap-2 rounded-btn border border-mastered-line bg-mastered-bg px-3 py-2 text-sm">
+                <span className="font-medium text-ink">
+                  Showing {filteredRows.length} question{filteredRows.length === 1 ? "" : "s"}
+                </span>
+                {activeTab !== "all" && (
+                  <button
+                    type="button"
+                    onClick={removeStatusFilter}
+                    aria-label={`Remove ${FILTER_LABELS[activeTab]} filter`}
+                    className="inline-flex min-h-10 items-center gap-1 rounded-full border border-mastered-line bg-card-bg px-3 text-sm font-medium text-mastered transition-colors hover:bg-mastered-bg focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-mastered focus-visible:ring-offset-2"
+                  >
+                    {FILTER_LABELS[activeTab]}
+                    <X className="h-3.5 w-3.5" aria-hidden="true" />
+                  </button>
+                )}
+                {selectedConcept && (
+                  <button
+                    type="button"
+                    onClick={removeConceptFilter}
+                    aria-label={`Remove ${selectedConcept.conceptName} filter`}
+                    className="inline-flex min-h-10 items-center gap-1 rounded-full border border-mastered-line bg-card-bg px-3 text-sm font-medium text-mastered transition-colors hover:bg-mastered-bg focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-mastered focus-visible:ring-offset-2"
+                  >
+                    {selectedConcept.conceptName}
+                    <X className="h-3.5 w-3.5" aria-hidden="true" />
+                  </button>
+                )}
+              </div>
+            )}
+          </div>
+        </section>
+      }
+      mainFooter={<ReviewActionBar onBack={() => navigate("/quiz")} onSubmit={handleSubmitClick} />}
     >
-      <div className="mx-auto max-w-2xl space-y-5 pb-4 lg:max-w-3xl xl:max-w-4xl">
+      <div className="mx-auto max-w-2xl lg:max-w-3xl xl:max-w-4xl">
         {/* <ReviewSummaryCards
           total={total}
           answeredCount={answeredCount}
@@ -260,54 +320,10 @@ export function ReviewPage() {
           unansweredCount={unansweredCount}
         /> */}
 
-        <div className="flex flex-col gap-3 sm:flex-row sm:flex-wrap sm:items-center sm:justify-between">
-          <ReviewTabs
-            activeTab={activeTab}
-            onTabChange={handleStatusFilter}
-            counts={counts}
-          />
-          <SortSelect value={sortKey} onChange={setSortKey} />
-        </div>
-
-        {(activeTab !== "all" || selectedConcept) && (
-          <div className="flex flex-wrap items-center gap-2 rounded-btn border border-mastered-line bg-mastered-bg px-3 py-2 text-sm">
-            <span className="font-medium text-ink">
-              Showing {filteredRows.length} question{filteredRows.length === 1 ? "" : "s"}
-            </span>
-            {activeTab !== "all" && (
-              <button
-                type="button"
-                onClick={removeStatusFilter}
-                aria-label={`Remove ${FILTER_LABELS[activeTab]} filter`}
-                className="inline-flex min-h-10 items-center gap-1 rounded-full border border-mastered-line bg-card-bg px-3 text-sm font-medium text-mastered transition-colors hover:bg-mastered-bg focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-mastered focus-visible:ring-offset-2"
-              >
-                {FILTER_LABELS[activeTab]}
-                <X className="h-3.5 w-3.5" aria-hidden="true" />
-              </button>
-            )}
-            {selectedConcept && (
-              <button
-                type="button"
-                onClick={removeConceptFilter}
-                aria-label={`Remove ${selectedConcept.conceptName} filter`}
-                className="inline-flex min-h-10 items-center gap-1 rounded-full border border-mastered-line bg-card-bg px-3 text-sm font-medium text-mastered transition-colors hover:bg-mastered-bg focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-mastered focus-visible:ring-offset-2"
-              >
-                {selectedConcept.conceptName}
-                <X className="h-3.5 w-3.5" aria-hidden="true" />
-              </button>
-            )}
-          </div>
-        )}
-
         <ReviewQuestionTable
           rows={sortedRows}
           answers={answers}
           onEdit={handleEdit}
-        />
-
-        <ReviewActionBar
-          onBack={() => navigate("/quiz")}
-          onSubmit={handleSubmitClick}
         />
       </div>
 
@@ -395,15 +411,19 @@ function ReviewActionBar({
   onSubmit,
 }: ReviewActionBarProps) {
   return (
-    <div className="flex flex-col gap-3 pt-2 sm:flex-row sm:items-center sm:justify-between">
-      <Button variant="secondary" onClick={onBack} className="min-h-11 sm:min-w-40">
-        <ArrowLeft className="h-4 w-4" aria-hidden="true" />
-        Back to questions
-      </Button>
-      <Button variant="primary" onClick={onSubmit} className="min-h-11 sm:min-w-44">
-        Generate Diagnostic Report
-        <CheckCircle2 className="h-4 w-4" aria-hidden="true" />
-      </Button>
-    </div>
+    <section className="border-t-2 border-border bg-card-bg shadow-card" aria-label="Review actions">
+      <div className="px-4 py-3 sm:px-6 lg:px-8">
+        <div className="mx-auto flex max-w-2xl flex-col gap-2 lg:max-w-3xl sm:flex-row sm:items-center sm:justify-between xl:max-w-4xl">
+          <Button variant="ghost" onClick={onBack} className="min-h-11 w-full justify-start sm:w-auto">
+          <ArrowLeft className="h-4 w-4" aria-hidden="true" />
+          Back to questions
+          </Button>
+          <Button variant="primary" onClick={onSubmit} className="min-h-11 w-full sm:w-auto sm:min-w-44">
+            Generate Diagnostic Report
+            <CheckCircle2 className="h-4 w-4" aria-hidden="true" />
+          </Button>
+        </div>
+      </div>
+    </section>
   );
 }

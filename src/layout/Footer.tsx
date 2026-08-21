@@ -15,15 +15,19 @@ import type { ReactNode } from "react";
 export interface FooterProps {
   /** Page-specific footer content (QuizPage: auto-save + shortcuts). */
   children?: ReactNode;
+  /** Replaces the default padded top-border treatment for page-specific
+   * footer content. Custom content is responsible for its own borders and
+   * spacing, such as ReviewPage's full-width action strip. */
+  contentClassName?: string;
 }
 
-export function Footer({ children }: FooterProps) {
+export function Footer({ children, contentClassName }: FooterProps) {
   return (
     <footer className="shrink-0">
       {children && (
-        <div className="border-t border-border px-6 py-3">{children}</div>
+        <div className={contentClassName ?? "border-t border-border px-6 py-3"}>{children}</div>
       )}
-      <div className="flex items-center justify-center border-t border-border px-6 py-2 text-xs text-ink-faint">
+      <div className={`flex items-center justify-center ${contentClassName ? "" : "border-t border-border"} px-6 py-2 text-xs text-ink-faint`}>
         © 2026 CSLabs. All rights reserved.
       </div>
     </footer>

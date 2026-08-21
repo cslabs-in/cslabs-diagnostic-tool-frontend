@@ -70,6 +70,8 @@ export interface SidebarProps {
   ref?: Ref<SidebarHandle>;
   /** Override the default w-80 sidebar width with responsive classes. */
   widthClassName?: string;
+  /** Replaces the default surface classes for the pinned sidebar variant. */
+  pinnedSurfaceClassName?: string;
 }
 
 export function Sidebar({
@@ -80,6 +82,7 @@ export function Sidebar({
   visible = false,
   ref,
   widthClassName,
+  pinnedSurfaceClassName,
 }: SidebarProps) {
   const [open, setOpen] = useState(false);
   // True while the cursor is over the Guide button or the open drawer; the
@@ -125,7 +128,8 @@ export function Sidebar({
     return (
       <aside className={cn(
         widthClassName ?? "w-80",
-        "shrink-0 overflow-y-auto bg-page-bg p-6 dark:bg-untested-bg",
+        "shrink-0 overflow-y-auto p-6",
+        pinnedSurfaceClassName ?? "bg-page-bg dark:bg-untested-bg",
         wideOnly ? "hidden xl:block" : "hidden min-[821px]:block",
         hideScrollbar && "no-scrollbar",
       )}>
