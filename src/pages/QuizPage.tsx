@@ -1,5 +1,5 @@
 import { useEffect, useRef, useState } from "react";
-import { useNavigate } from "react-router-dom";
+import { useLocation, useNavigate } from "react-router-dom";
 import { CheckCircle2, LogOut } from "lucide-react";
 import { DiagnosticLayout } from "../layout/DiagnosticLayout";
 import type { SidebarHandle } from "../layout/Sidebar";
@@ -17,7 +17,9 @@ const LETTERS: OptionLetter[] = ["A", "B", "C", "D"];
 
 export function QuizPage() {
   const navigate = useNavigate();
+  const location = useLocation();
   const { theme, questions, answers, currentIndex, goToIndex, setAnswer } = useSession();
+  const isReviewMode = location.state?.reviewMode === true;
 
   const question = questions[currentIndex];
   const total = questions.length;
@@ -52,7 +54,7 @@ export function QuizPage() {
   // there's no active question, so the listener is a no-op in that case.
   const keyActions = useRef<{
     select: (letter: OptionLetter) => void;
-    back: () => void;
+    back?: () => void;
     next: () => void;
     skip: () => void;
     toggleGuide: () => void;
@@ -63,8 +65,8 @@ export function QuizPage() {
     keyActions.current = question
       ? {
           select: handleSelect,
-          back: handleBack,
-          next: goToNext,
+          back: isReviewMode ? undefined : handleBack,
+          next: isReviewMode ? handleBackToReview : goToNext,
           skip: handleSkip,
           toggleGuide: () => guideSidebarRef.current?.toggle(),
           locked: showCompletion || showExitConfirm,
@@ -102,7 +104,7 @@ export function QuizPage() {
       } else if (/^[a-dA-D]$/.test(key)) {
         e.preventDefault();
         actions.select(key.toUpperCase() as OptionLetter);
-      } else if (key === "ArrowLeft") {
+      } else if (key === "ArrowLeft" && actions.back) {
         e.preventDefault();
         actions.back();
       } else if (key === "Enter") {
@@ -153,6 +155,10 @@ export function QuizPage() {
   }
 
   function finish() {
+    if (isReviewMode) {
+      navigate("/review");
+      return;
+    }
     if (showCompletion) return;
     setShowCompletion(true);
     completionTimer.current = window.setTimeout(() => navigate("/review"), 1600);
@@ -168,11 +174,19 @@ export function QuizPage() {
 
   function handleSkip() {
     void setAnswer(question.questionId, null);
+    if (isReviewMode) {
+      navigate("/review");
+      return;
+    }
     goToNext();
   }
 
   function handleBack() {
     if (currentIndex > 0) goToIndex(currentIndex - 1);
+  }
+
+  function handleBackToReview() {
+    navigate("/review");
   }
 
   function handleExit() {
@@ -193,7 +207,7 @@ export function QuizPage() {
       onExit={handleExit}
       themeName={theme ? getThemeDisplayName(theme) : undefined}
       questionCount={questions.length}
-      footer={<QuizFooterBar />}
+      footer={<QuizFooterBar reviewMode={isReviewMode} isLast={currentIndex === total - 1} />}
     >
       {/* The quiz block is the central object of the page: centered both
           horizontally and vertically in the main area, and the content
@@ -227,6 +241,8 @@ export function QuizPage() {
           onSkip={handleSkip}
           canGoBack={currentIndex > 0}
           isLast={currentIndex === total - 1}
+          reviewMode={isReviewMode}
+          onBackToReview={handleBackToReview}
         />
         </div>
       </div>

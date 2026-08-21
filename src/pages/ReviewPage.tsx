@@ -192,6 +192,11 @@ export function ReviewPage() {
   // themselves are inert (design reference).
   function handleEdit(index: number) {
     goToIndex(index);
+    navigate("/quiz", { state: { reviewMode: true } });
+  }
+
+  function handleBackToQuestions() {
+    goToIndex(Math.max(questions.length - 1, 0));
     navigate("/quiz");
   }
 
@@ -310,7 +315,7 @@ export function ReviewPage() {
           </div>
         </section>
       }
-      mainFooter={<ReviewActionBar onBack={() => navigate("/quiz")} onSubmit={handleSubmitClick} />}
+      mainFooter={<ReviewActionBar onBack={handleBackToQuestions} onSubmit={handleSubmitClick} />}
     >
       <div className="mx-auto max-w-2xl lg:max-w-3xl xl:max-w-4xl">
         {/* <ReviewSummaryCards

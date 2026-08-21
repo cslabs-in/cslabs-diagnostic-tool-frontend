@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useState, type KeyboardEvent } from "react";
 import {
   CheckCircle2,
   ChevronDown,
@@ -15,8 +15,8 @@ import type { Answer, Question } from "../../types/diagnostic";
 
 /**
  * ReviewQuestionTable -- a dense table from md upward and calm answer cards
- * on phones. Only the clearly labelled Review control routes back into the
- * quiz, so the affordance never contradicts the page copy.
+ * on phones. Each row/card routes back into the quiz so reviewing a response
+ * is direct and the chevron remains a quiet directional cue.
  *
  * Paginates when the row count exceeds `pageSize` (default 20 -- the
  * current 12-question themes stay on a single page, matching the design
@@ -98,6 +98,13 @@ export function ReviewQuestionTable({
     setPageSizeState(newSize);
     setPageState({ key: questionSetKey, page: Math.floor(firstVisible / newSize) + 1 });
   }
+
+  function handleRowKeyDown(event: KeyboardEvent, index: number) {
+    if (event.key === "Enter" || event.key === " ") {
+      event.preventDefault();
+      onEdit(index);
+    }
+  }
   const visibleRows = rows.slice(start, start + pageSizeState);
   // Keep the bar visible once the user opts into a non-default page size,
   // even if everything fits on one page -- otherwise the per-page selector
@@ -131,7 +138,7 @@ export function ReviewQuestionTable({
               Status
             </th>
             <th scope="col" className="px-4 py-3 text-right font-semibold">
-              Action
+              <span className="sr-only">Review</span>
             </th>
           </tr>
         </thead>
@@ -151,7 +158,12 @@ export function ReviewQuestionTable({
               return (
                 <tr
                   key={question.questionId}
-                  className="transition-colors duration-150 hover:bg-page-bg"
+                  role="button"
+                  tabIndex={0}
+                  aria-label={`Review question Q${index + 1}`}
+                  onClick={() => onEdit(index)}
+                  onKeyDown={(event) => handleRowKeyDown(event, index)}
+                  className="group cursor-pointer transition-colors duration-150 hover:bg-page-bg focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-inset focus-visible:ring-mastered"
                 >
                   <td className="px-4 py-3 text-xs font-bold text-ink-soft">
                     Q{index + 1}
@@ -168,15 +180,10 @@ export function ReviewQuestionTable({
                     <StatusCell status={status} />
                   </td>
                   <td className="px-4 py-3 text-right">
-                    <button
-                      type="button"
-                      onClick={() => onEdit(index)}
-                      aria-label={`Review question Q${index + 1}`}
-                      className="inline-flex min-h-9 items-center gap-1.5 rounded-btn border border-border px-2.5 text-xs font-semibold text-mastered transition-colors duration-150 hover:border-mastered-line hover:bg-mastered-bg focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-mastered focus-visible:ring-offset-2"
-                    >
-                      Review
-                      <ChevronRight className="h-4 w-4" aria-hidden="true" />
-                    </button>
+                    <ChevronRight
+                      className="ml-auto h-5 w-5 text-ink-faint transition-transform duration-150 group-hover:translate-x-0.5"
+                      aria-hidden="true"
+                    />
                   </td>
                 </tr>
               );
@@ -198,26 +205,29 @@ export function ReviewQuestionTable({
               ? answers[question.questionId]!.selectedOption
               : "No response selected";
             return (
-              <article key={question.questionId} className="space-y-3 p-4">
+              <article
+                key={question.questionId}
+                role="button"
+                tabIndex={0}
+                aria-label={`Review question Q${index + 1}`}
+                onClick={() => onEdit(index)}
+                onKeyDown={(event) => handleRowKeyDown(event, index)}
+                className="cursor-pointer space-y-3 p-4 transition-colors duration-150 hover:bg-page-bg focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-inset focus-visible:ring-mastered"
+              >
                 <div className="flex items-start justify-between gap-3">
                   <div>
                     <p className="text-sm font-semibold text-ink">Question {index + 1}</p>
                     <div className="mt-2"><Badge variant="concept">{question.conceptName}</Badge></div>
                   </div>
-                  <StatusCell status={status} />
+                  <div className="flex items-center gap-2">
+                    <StatusCell status={status} />
+                    <ChevronRight className="h-5 w-5 shrink-0 text-ink-faint" aria-hidden="true" />
+                  </div>
                 </div>
                 <div className="flex items-center justify-between rounded-btn bg-page-bg px-3 py-2 text-sm">
                   <span className="text-ink-soft">Your response</span>
                   <span className="font-semibold text-ink">{response}</span>
                 </div>
-                <button
-                  type="button"
-                  onClick={() => onEdit(index)}
-                  className="inline-flex min-h-11 w-full items-center justify-center gap-2 rounded-btn border border-mastered-line px-4 text-sm font-semibold text-mastered transition-colors duration-150 hover:bg-mastered-bg focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-mastered focus-visible:ring-offset-2"
-                >
-                  Review answer
-                  <ChevronRight className="h-4 w-4" aria-hidden="true" />
-                </button>
               </article>
             );
           })

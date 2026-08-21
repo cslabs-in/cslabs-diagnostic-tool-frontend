@@ -20,7 +20,7 @@ function Kbd({ children }: { children: string }) {
   );
 }
 
-const SHORTCUTS: Array<{ keys: string[]; action: string }> = [
+const QUIZ_SHORTCUTS: Array<{ keys: string[]; action: string }> = [
   { keys: ["1–4", "A–D"], action: "Answer" },
   { keys: ["←"], action: "Previous" },
   { keys: ["Enter"], action: "Next" },
@@ -28,7 +28,27 @@ const SHORTCUTS: Array<{ keys: string[]; action: string }> = [
   { keys: ["G"], action: "Guide" },
 ];
 
-export function QuizFooterBar() {
+const REVIEW_SHORTCUTS: Array<{ keys: string[]; action: string }> = [
+  { keys: ["1–4", "A–D"], action: "Answer" },
+  { keys: ["Enter"], action: "Back to Review" },
+  { keys: ["S"], action: "Skip" },
+  { keys: ["G"], action: "Guide" },
+];
+
+interface QuizFooterBarProps {
+  reviewMode?: boolean;
+  isLast?: boolean;
+}
+
+export function QuizFooterBar({ reviewMode = false, isLast = false }: QuizFooterBarProps) {
+  const shortcuts = reviewMode
+    ? REVIEW_SHORTCUTS
+    : QUIZ_SHORTCUTS.map((shortcut) =>
+        shortcut.action === "Next" && isLast
+          ? { ...shortcut, action: "Review answers" }
+          : shortcut,
+      );
+
   return (
     <div className="flex flex-wrap items-center justify-between gap-x-6 gap-y-3">
       <div className="flex items-center gap-2">
@@ -48,7 +68,7 @@ export function QuizFooterBar() {
           Shortcuts
         </span>
         <span className="h-4 w-px bg-border" aria-hidden="true" />
-        {SHORTCUTS.map((row) => (
+        {shortcuts.map((row) => (
           <span key={row.action} className="flex items-center gap-1.5">
             {row.keys.map((key, i) => (
               <span key={key} className="flex items-center gap-1.5">

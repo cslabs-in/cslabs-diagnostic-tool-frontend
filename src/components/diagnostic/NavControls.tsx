@@ -19,6 +19,9 @@ export interface NavControlsProps {
   onSkip: () => void;
   canGoBack: boolean;
   isLast: boolean;
+  /** Review mode replaces quiz progression with a return-to-review action. */
+  reviewMode?: boolean;
+  onBackToReview?: () => void;
 }
 
 export function NavControls({
@@ -27,7 +30,32 @@ export function NavControls({
   onSkip,
   canGoBack,
   isLast,
+  reviewMode = false,
+  onBackToReview,
 }: NavControlsProps) {
+  if (reviewMode) {
+    return (
+      <div className="grid grid-cols-2 items-center gap-3">
+        <div className="justify-self-start">
+          <button
+            type="button"
+            onClick={onSkip}
+            className="inline-flex min-h-11 items-center gap-2 rounded-btn border border-skip-line bg-skip-bg px-4 py-2 text-sm font-medium text-skip transition-shadow duration-150 hover:border-skip hover:bg-skip-line hover:text-[#5d3d1e] dark:hover:text-[#ecd9b8] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-skip focus-visible:ring-offset-2"
+          >
+            <Info className="h-4 w-4" aria-hidden="true" />
+            Skip question
+          </button>
+        </div>
+
+        <div className="justify-self-end">
+          <Button variant="primary" onClick={onBackToReview} className="min-h-11">
+            Back to Review
+          </Button>
+        </div>
+      </div>
+    );
+  }
+
   return (
     <div className="grid grid-cols-3 items-center">
       <div className="justify-self-start">
@@ -51,7 +79,7 @@ export function NavControls({
 
       <div className="justify-self-end">
         <Button variant="primary" onClick={onNext}>
-          {isLast ? "Finish" : "Next"}
+          {isLast ? "Review answers" : "Next"}
         </Button>
       </div>
     </div>
