@@ -1,12 +1,13 @@
 import axios from "axios";
 
+const apiBaseUrl = import.meta.env.VITE_API_BASE_URL ?? "http://localhost:8000/api";
+
 /**
- * Single axios instance for the whole api/ layer. Base URL matches the
- * confirmed local backend (http://127.0.0.1:8000) plus the /api prefix
- * every router is mounted under in main.py.
+ * Single axios instance for the whole api layer. Deployments provide
+ * VITE_API_BASE_URL (including the /api prefix); local development keeps the
+ * existing FastAPI default.
  */
 export const apiClient = axios.create({
-  // baseURL: "https://cslabs-diagnostic-tool.onrender.com/api",
-  baseURL: "http://localhost:8000/api",
+  baseURL: apiBaseUrl,
   headers: { "Content-Type": "application/json" },
 });
